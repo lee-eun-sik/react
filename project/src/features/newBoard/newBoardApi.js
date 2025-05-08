@@ -28,7 +28,7 @@ export const newBoardApi = createApi({
     }),
 });
 
-export const {
+export const {// 구조분해할당 이미만든것임. 객체안에 이미들어가있다. 
     useNewBoardListQuery,
     useNewBoardCreateMutation,
 } = newBoardApi;

@@ -1,4 +1,12 @@
-function Header() {
-    return <h1>나의 리액트 앱</h1>
-}
+// ✅ Header.js
+import React from 'react';
+
+const Header = () => {
+    return (
+        <header>
+            <h1>Header</h1>
+        </header>
+    );
+};
+
 export default Header;
