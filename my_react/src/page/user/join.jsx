@@ -8,13 +8,20 @@ import { CmUtil } from '../../cm/CmUtil';
 const Register = () => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
+  const [password_confirm, setPassword_confirm] = useState('');
   const [username, setUsername] = useState('');
+  const [gender, setGender] = useState('');
+  const [phonenumber, setPhonenumber] = useState('');
   const [email, setEmail] = useState('');
-
+  const [birthday, setBirthday] = useState('');
   const userIdRef = useRef();
   const passwordRef = useRef();
+  const password_confirmRef = useRef();
   const usernameRef = useRef();
+  const genderRef = useRef();
+  const phonenumberRef = useRef();
   const emailRef = useRef();
+  const birthdayRef= useRef();
 
   const { showAlert } = useCmDialog();
  
@@ -34,6 +41,11 @@ const Register = () => {
       passwordRef.current?.focus();
       return;
     }
+    if (CmUtil.isEmpty(password_confirm)) {
+      showAlert('비밀번호를 다시 입력해주세요.');
+      password_confirmRef.current?.focus();
+      return;
+    }
 
     if (CmUtil.isEmpty(username)) {
       showAlert('이름을 입력해주세요.');
@@ -41,6 +53,11 @@ const Register = () => {
       return;
     }
 
+    if (CmUtil.isEmpty(phonenumber)) {
+      showAlert("전화번호를 입력해주세요.");
+      phonenumberRef.current?.focus();
+      return;
+    }
     if (CmUtil.isEmpty(email)) {
       showAlert('이메일을 입력해주세요.');
       emailRef.current?.focus();
@@ -50,6 +67,12 @@ const Register = () => {
     if (!CmUtil.isEmail(email)) {
       showAlert('유효한 이메일 형식이 아닙니다.');
       emailRef.current?.focus();
+      return;
+    }
+
+    if (CmUtil.isEmpty(birthday) || !CmUtil.isValidDate(birthday)) {
+      showAlert('유효한 생년월일을 YYYY-MM-DD 형식으로 입력해주세요.');
+      birthdayRef.current?.focus();
       return;
     }
     try {
@@ -96,6 +119,15 @@ const Register = () => {
         inputRef={passwordRef}
         onChange={(e) => setPassword(e.target.value)}
       />
+      <TextField
+        label="비밀번호확인"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={password_confirm}
+        inputRef={password_confirmRef}
+        onChange={(e) => setPassword_confirm(e.target.value)}
+      />
 
       <TextField
         label="이름"
@@ -105,7 +137,35 @@ const Register = () => {
         inputRef={usernameRef}
         onChange={(e) => setUsername(e.target.value)}
       />
+      <Box display="flex" alignItems="center" gap={2} width="100%">
+        <Typography>성별</Typography>
+        <label>
+            <input
+            type="radio"
+            value="남성"
+            checked={gender === 'M'}
+            onChange={() => setGender('M')}
+            /> 남성
+        </label>
+        <label>
+            <input
+            type="radio"
+            value="여성"
+            checked={gender === 'F'}
+            onChange={() => setGender('F')}
+            /> 여성
+        </label>
+        </Box>
 
+      <TextField
+        label="전화번호"
+        fullWidth
+        margin="normal"
+        value={phonenumber}
+        inputRef={phonenumberRef}
+        onChange={(e) => setPhonenumber(e.target.value)}
+      />
+      
       <TextField
         label="이메일"
         type="email"
@@ -115,7 +175,16 @@ const Register = () => {
         inputRef={emailRef}
         onChange={(e) => setEmail(e.target.value)}
       />
-
+      <TextField
+        label="생년월일"
+        type="date"
+        fullWidth
+        margin="normal"
+        value={birthday}
+        inputRef={birthdayRef}
+        onChange={(e) => setBirthday(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+      />
       <Button
         onClick={handleRegisterClick}
         variant="contained"
@@ -125,14 +194,14 @@ const Register = () => {
       >
         회원가입
       </Button>
-     <  Button
-        onClick={() => navigate('/user/login.do')}
-        variant="contained"
-        color="primary"
+     <Button
+        onClick={() => navigate('/')}  // 또는 원하는 페이지
+        variant="outlined"
+        color="secondary"
         fullWidth
         sx={{ marginTop: 2 }}
-      >
-        로그인
+     >
+        가입취소
         </Button>
     </Box>
   );

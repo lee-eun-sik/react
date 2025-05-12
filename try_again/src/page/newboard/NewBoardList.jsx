@@ -80,7 +80,7 @@ const NewBoardList = () => {
                   type="date"
                   value={search.startDate}
                   inputRef={startDateRef}
-                  onChange={(e) => ScreenSearchDesktop({...search, startDate: e.target.value })}
+                  onChange={(e) => setSearch({...search, startDate: e.target.value })}
                 />
                 <TextField
                   lable="종료일"

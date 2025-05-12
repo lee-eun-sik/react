@@ -97,10 +97,4 @@ const App = () => {
 };
 
 // 루트에 BrowserRouter로 App을 감싸기
-export default function RootApp() {
-  return (
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  );
-}
+export default App; 

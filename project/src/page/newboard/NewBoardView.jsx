@@ -10,14 +10,14 @@ import{
     Button,
     Divider
 } from '@mui/material';
-import { useBoardViewQuery } from '@/features/board/boardApi';
+import { useBoardViewQuery } from '../../features/board/boardApi';
 import CmComment from '../../cm/CmComment';
 
 const NewBoardView = () => {
     const [searchParams] = useSearchParams();
     const id = searchParams.get('id');
     const user = useSelector((state) => state.user.user);
-    const { data, isLoading, error, isSuccess, refetch } = useBoardViewQuery({ boardId: })
+    const { data, isLoading, error, isSuccess, refetch } = useBoardViewQuery({ boardId: id})
     const [board, setBoard] = useState(null);
     const navigate = useNavigate();
 

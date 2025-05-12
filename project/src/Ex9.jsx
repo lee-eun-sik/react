@@ -1,3 +1,5 @@
+import React, { useState, useMemo, useEffect } from 'react';
+
 const Ex9 = () => {
     console.log("Ex9 랜더링");
     const [number, setNumber] = useState(0);

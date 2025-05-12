@@ -30,3 +30,5 @@ const Ex12 = () => {
         </>
     );
 };
+
+export default Ex12;

@@ -182,11 +182,7 @@ const BoardUpdate = () => {
                 >
                   <ListItemText
                     primary={
-<<<<<<< HEAD
-                      <a href={`/api/file/down.do?fileId=${file.fileId}`} target="_blank" rel="noopener noreferrer">
-=======
                       <a href={`${process.env.REACT_APP_API_BASE_URL}/api/file/down.do?fileId=${file.fileId}`} target="_blank" rel="noopener noreferrer">
->>>>>>> d26bca1df8bbc0a230428c48e89f22a44812d825
                         {file.fileName}
                       </a>
                     }

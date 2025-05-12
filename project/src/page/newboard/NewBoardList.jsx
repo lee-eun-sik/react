@@ -58,11 +58,7 @@ const NewBoardList = () => {
             headerName: '상세보기',
             width: 100,
             renderCell: (params) => (
-<<<<<<< HEAD
-                <Button onClick={(e) => navigate(`/board/view.do?id=${params.row.boardId}`)}>보기</Button>
-=======
                 <Button onClick={(e) => navigate(`/newBoard/view.do?id=${params.row.boardId}`)}>보기</Button>
->>>>>>> d26bca1df8bbc0a230428c48e89f22a44812d825
             ),
             sortable: false
         },
@@ -84,7 +80,7 @@ const NewBoardList = () => {
                   type="date"
                   value={search.startDate}
                   inputRef={startDateRef}
-                  onChange={(e) => ScreenSearchDesktop({...search, startDate: e.target.value })}
+                  onChange={(e) => setSearch({...search, startDate: e.target.value })}
                 />
                 <TextField
                   lable="종료일"

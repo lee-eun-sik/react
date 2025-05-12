@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
 import CmDataGrid from '../../cm/CmDataGrid'; // 경로는 상황에 맞게 조정
-import { useBoardListQuery } from '../../features/board/boardApi'; // RTK Query 사용 시
+import { useReservationListQuery } from '../../features/reservation/reservationApi'; // RTK Query 사용 시
 import { useNavigate } from 'react-router-dom';
 import { CmUtil } from '../../cm/CmUtil';
 import { useSelector } from 'react-redux';
 import { useCmDialog } from '../../cm/CmDialogUtil';  
 
-const BoardList = () => {
+const Reservationlist = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState({
     searchText: '',
@@ -18,7 +18,7 @@ const BoardList = () => {
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
   const user = useSelector((state) => state.user.user); // 로그인된 사용자 정보
-  const { data, isLoading, refetch } = useBoardListQuery({
+  const { data, isLoading, refetch } = useReservationListQuery({
     ...search,
     page,
     sortField: sort.field,
@@ -26,7 +26,7 @@ const BoardList = () => {
   });
   const rowsWithId = (data?.data?.list || []).map((row) => ({
     ...row,
-    id: row.boardId,
+    id: row.reservationId,
   }));
   const { showAlert } = useCmDialog();
   useEffect(() => {
@@ -70,21 +70,27 @@ const BoardList = () => {
   };
   const navigate = useNavigate();
   const columns = [
-    { field: 'rn', headerName: '번호', width: 90, sortable: false },
-    { field: 'title', headerName: '제목', width: 300, dbName:"title"},
-    { field: 'createId', headerName: '작성자', width: 150, dbName:"create_id" },
-    { field: 'viewCount', headerName: '조회수', width: 100, dbName:"view_count" },
-    { field: 'createDt', headerName: '작성일', width: 180, dbName:"create_dt" },
-    {
-      field: 'action',
-      headerName: '상세보기',
-      width: 100,
-      renderCell: (params) => (
-        <Button onClick={(e) => navigate(`/board/view.do?id=${params.row.boardId}`)}>보기</Button>
-      ),
-      sortable: false 
-    },
-  ];
+  { field: 'reservationId', headerName: '아이디', width: 90 , dbName: "reservation_id"},
+  { field: 'reservationDate', headerName: '날짜', width: 180, dbName: "reservation_date" },
+  { field: 'address', headerName: '주소', width: 250, dbName: "address" },
+  { field: 'variety', headerName: '품종', width: 100, dbName: "variety" },
+  { field: 'petName', headerName: '펫이름', width: 100, dbName: "pet_name" },
+  { field: 'phoneNumber', headerName: '전화번호', width: 150, dbName: "phonenumber" },
+  { field: 'sitter', headerName: '펫시터', width: 100 , dbName: "sitter"},
+  { field: 'price', headerName: '입금', width: 100, type: 'number', dbName: "price" },
+  {
+    field: 'actions',
+    headerName: '관리',
+    width: 150,
+    sortable: false,
+    renderCell: (params) => (
+      <>
+        <Button variant="contained" size="small" sx={{ mr: 1 }}>수정</Button>
+        <Button variant="contained" color="error" size="small">삭제</Button>
+      </>
+    ),
+  },
+];
 
   return (
     <Box sx={{ p: 3 }}>
@@ -139,4 +145,4 @@ const BoardList = () => {
   );
 };
 
-export default BoardList;
+export default Reservationlist;
