@@ -12,6 +12,7 @@ import { setNavigate } from './cm/CmNavigateUtil';
 import LayoutLogin from './layout/LayoutLogin';
 import LayoutNoLogin from './layout/LayoutNoLogin';
 import ReservationList from './page/reservation/Reservationlist'; 
+import Memberlist from './page/member/Memberlist';
 const App = () => {
   const navigate = useNavigate();
 
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/user/main.do" element={<LayoutNoLogin><Main/></LayoutNoLogin>} />
         <Route path="/user/userInfo.do" element={<LayoutNoLogin><UserInfo/></LayoutNoLogin>} />
         <Route path="/reservation/list.do" element={<LayoutNoLogin><ReservationList/></LayoutNoLogin>} />
+        <Route path="/member/list.do" element={<LayoutNoLogin><Memberlist/></LayoutNoLogin>} />
       </Routes>
       
   );
