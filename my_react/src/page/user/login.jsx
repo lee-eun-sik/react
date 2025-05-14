@@ -51,6 +51,11 @@ const Login = () => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleLoginClick();
+    }
+  };
 
   return (
     <Box
@@ -73,6 +78,7 @@ const Login = () => {
         value={userId}
         inputRef={userIdRef}
         onChange={(e) => setUserId(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
 
       <TextField
@@ -83,6 +89,7 @@ const Login = () => {
         value={password}
         inputRef={passwordRef}
         onChange={(e) => setPassword(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
         
       <Button

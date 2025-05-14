@@ -1,4 +1,4 @@
-import React, { useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import { useRegisterMutation } from '../../features/user/userApi';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography } from '@mui/material';
@@ -18,7 +18,6 @@ const Register = () => {
   const passwordRef = useRef();
   const password_confirmRef = useRef();
   const usernameRef = useRef();
-  const genderRef = useRef();
   const phonenumberRef = useRef();
   const emailRef = useRef();
   const birthdayRef= useRef();
@@ -29,7 +28,6 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleRegisterClick = async () => {
-
     if (CmUtil.isEmpty(userId)) {
       showAlert('아이디를 입력해주세요.');
       userIdRef.current?.focus();
@@ -76,15 +74,21 @@ const Register = () => {
       return;
     }
     try {
-      const response = await register({ userId, password, username, email }).unwrap();
+      const response = await register({ userId, password, username, email, gender, phonenumber, birthday }).unwrap();
       if (response.success) {
-        showAlert("회원가입에 성공 하셨습니다. 로그인화면으로 이동합니다.",()=>{navigate('/user/login.do');});
+        showAlert("회원가입에 성공 하셨습니다. 로그인화면으로 이동합니다.", () => { navigate('/user/login.do'); });
       } else {
         showAlert('회원가입에 실패했습니다. 다시 시도해주세요.');
       }
     } catch (error) {
       showAlert('회원가입에 실패했습니다. 다시 시도해주세요.');
-    } 
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleRegisterClick();
+    }
   };
 
   return (
@@ -108,6 +112,7 @@ const Register = () => {
         value={userId}
         inputRef={userIdRef}
         onChange={(e) => setUserId(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
 
       <TextField
@@ -118,6 +123,7 @@ const Register = () => {
         value={password}
         inputRef={passwordRef}
         onChange={(e) => setPassword(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
       <TextField
         label="비밀번호확인"
@@ -127,6 +133,7 @@ const Register = () => {
         value={password_confirm}
         inputRef={password_confirmRef}
         onChange={(e) => setPassword_confirm(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
 
       <TextField
@@ -136,26 +143,27 @@ const Register = () => {
         value={username}
         inputRef={usernameRef}
         onChange={(e) => setUsername(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
       <Box display="flex" alignItems="center" gap={2} width="100%">
         <Typography>성별</Typography>
         <label>
-            <input
+          <input
             type="radio"
             value="남성"
             checked={gender === 'M'}
             onChange={() => setGender('M')}
-            /> 남성
+          /> 남성
         </label>
         <label>
-            <input
+          <input
             type="radio"
             value="여성"
             checked={gender === 'F'}
             onChange={() => setGender('F')}
-            /> 여성
+          /> 여성
         </label>
-        </Box>
+      </Box>
 
       <TextField
         label="전화번호"
@@ -164,8 +172,9 @@ const Register = () => {
         value={phonenumber}
         inputRef={phonenumberRef}
         onChange={(e) => setPhonenumber(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
-      
+
       <TextField
         label="이메일"
         type="email"
@@ -174,6 +183,7 @@ const Register = () => {
         value={email}
         inputRef={emailRef}
         onChange={(e) => setEmail(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
       <TextField
         label="생년월일"
@@ -184,6 +194,7 @@ const Register = () => {
         inputRef={birthdayRef}
         onChange={(e) => setBirthday(e.target.value)}
         InputLabelProps={{ shrink: true }}
+        onKeyPress={handleKeyPress}
       />
       <Button
         onClick={handleRegisterClick}
@@ -194,15 +205,15 @@ const Register = () => {
       >
         회원가입
       </Button>
-     <Button
-        onClick={() => navigate('/')}  // 또는 원하는 페이지
+      <Button
+        onClick={() => navigate('/')}
         variant="outlined"
         color="secondary"
         fullWidth
         sx={{ marginTop: 2 }}
-     >
+      >
         가입취소
-        </Button>
+      </Button>
     </Box>
   );
 };

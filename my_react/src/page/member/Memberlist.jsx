@@ -19,7 +19,8 @@ const Memberlist = () => {
     const endDateRef = useRef(null);
     const user = useSelector((state) => state.user.user); // 로그인된 사용자 정보
     const { data, isLoading, refetch } = useMemberListQuery({
-      searchText: search.searchText,
+      searchType: search.searchText ? 'userId' : null,  // 또는 user_id
+      searchKeyword: search.searchText,
       startDate: search.startDate,
       endDate: search.endDate,
       page,
@@ -28,14 +29,16 @@ const Memberlist = () => {
       sortOrder: sort.order,
     });
     console.log('Member list data:', data);
+    console.log("sortField:", sort.field, "sortOrder:", sort.order);
     const rowsWithId = (data?.data.list || []).map((row) => ({
       ...row,
       id: row.userId,
     }));
+    console.log(rowsWithId.sort((a, b) => new Date(b.createDt) - new Date(a.createDt)));
     const { showAlert } = useCmDialog();
     useEffect(() => {
         refetch();
-    }, [refetch, page, search]);
+    }, [refetch, page, search, sort]);
 
     const handleSortChange = (model) => {
         const { field, sort } = model[0];
@@ -48,7 +51,9 @@ const Memberlist = () => {
     };
 
     const handleSearch = () => {
-        const { startDate, endDate} = search;
+        console.log('search:', search);  // 콘솔 로그로 값이 어떻게 업데이트 되는지 확인
+
+        const { startDate, endDate } = search;
 
         if (startDate && !CmUtil.isValidDate(startDate)) {
             showAlert("시작일 형식이 잘못되었습니다 (YYYY-MM-DD).");
@@ -68,8 +73,8 @@ const Memberlist = () => {
             return;
         }
 
-        setPage(1);
-        refetch();
+        setPage(1);  // 페이지를 1로 초기화
+        refetch();   // refetch 호출하여 서버에 요청
     };
     const navigate = useNavigate();
     const columns = [
@@ -92,7 +97,11 @@ const Memberlist = () => {
       ),
     },
     ];
-
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter') {
+        handleSearch();
+      } 
+    };
     return (
         <Box sx={{ p: 3}}>
             <h2>회원목록</h2>
@@ -116,6 +125,7 @@ const Memberlist = () => {
                   label="검색어"
                   value={search.searchText}
                   onChange={(e) => setSearch({ ...search, searchText: e.target.value })}
+                  onKeyPress={handleKeyPress}
                 />
                 <TextField
                   label="시작일"
@@ -123,6 +133,7 @@ const Memberlist = () => {
                   value={search.startDate}
                   inputRef={startDateRef}
                   onChange={(e) => setSearch({ ...search, startDate: e.target.value})}
+                  onKeyPress={handleKeyPress}
                 />
                 <TextField
                   label="종료일"
@@ -130,12 +141,13 @@ const Memberlist = () => {
                   value={search.endDate}
                   inputRef={endDateRef}
                   onChange={(e) => setSearch({ ...search, endDate: e.target.value })}
+                  onKeyPress={handleKeyPress}
                 />
                 <Button variant="contained" onClick={handleSearch}>검색</Button>
                 {user && (
                     <Button
                     variant="contained"
-                    onClick={() => navigate(`/board/create.do`)}
+                    onClick={() => navigate("/board/create.do")}
                     >
                         글쓰기
                     </Button>

@@ -24,7 +24,7 @@ const App = () => {
       <Routes>
         <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} />
         <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} />
-        <Route path="/user/register.do" element={<LayoutNoLogin><Join /></LayoutNoLogin>} />
+        <Route path="/user/join.do" element={<LayoutNoLogin><Join /></LayoutNoLogin>} />
         <Route path="/user/manager.do" element={<LayoutNoLogin><Manager/></LayoutNoLogin>} />
         <Route path="/user/main.do" element={<LayoutNoLogin><Main/></LayoutNoLogin>} />
         <Route path="/user/userInfo.do" element={<LayoutNoLogin><UserInfo/></LayoutNoLogin>} />
