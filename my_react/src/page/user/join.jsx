@@ -21,6 +21,9 @@ const Register = () => {
   const phonenumberRef = useRef();
   const emailRef = useRef();
   const birthdayRef= useRef();
+  const [emailCode, setEmailCode] = useState('');
+  const [emailSent, setEmailSent] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const { showAlert } = useCmDialog();
  
@@ -73,6 +76,12 @@ const Register = () => {
       birthdayRef.current?.focus();
       return;
     }
+
+    if (!isEmailVerified) {
+      showAlert('이메일 인증을 완료해주세요.');
+      emailRef.current?.focus();
+      return;
+    }
     try {
       const response = await register({ userId, password, username, email, gender, phonenumber, birthday }).unwrap();
       if (response.success) {
@@ -90,7 +99,49 @@ const Register = () => {
       handleRegisterClick();
     }
   };
+  const handleSendEmailCode = async () => {
+    if (!CmUtil.isEmail(email)) {
+      showAlert('유효한 이메일 형식이 아닙니다.');
+      return;
+    }
+    try {
+      const BACKEND_URL = 'http://localhost:8081'; // 백엔드 포트 맞게 수정
+      const res = await fetch(`${BACKEND_URL}/api/email/send-code.do`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setEmailSent(true);
+        showAlert('인증번호가 이메일로 전송되었습니다.');
+      } else {
+        showAlert('인증번호 전송에 실패했습니다.');
+      }
+    } catch (e) {
+      showAlert('서버 오류가 발생했습니다.');
+    }
+  };
 
+  const handleVerifyEmailCode = async () => {
+    try {
+      const BACKEND_URL = 'http://localhost:8081'; // 백엔드 포트 맞게 수정
+      const res = await fetch(`${BACKEND_URL}/api/email/verify-code.do`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code: emailCode })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsEmailVerified(true);
+        showAlert('이메일 인증이 완료되었습니다.');
+      } else {
+        showAlert('인증번호가 일치하지 않습니다.');
+      }
+    } catch (e) {
+      showAlert('서버 오류가 발생했습니다.');
+    }
+  };
   return (
     <Box
       sx={{
@@ -185,6 +236,34 @@ const Register = () => {
         onChange={(e) => setEmail(e.target.value)}
         onKeyPress={handleKeyPress}
       />
+      <Button
+        onClick={handleSendEmailCode}
+        variant="outlined"
+        fullWidth
+        sx={{ mt: 1 }}
+      >
+        인증번호 전송
+      </Button>
+
+      {emailSent && (
+        <>
+          <TextField
+            label="인증번호 입력"
+            fullWidth
+            margin="normal"
+            value={emailCode}
+            onChange={(e) => setEmailCode(e.target.value)}
+          />
+          <Button
+            onClick={handleVerifyEmailCode}
+            variant="contained"
+            color="success"
+            fullWidth
+          >
+            인증번호 확인
+          </Button>
+        </>
+      )}
       <TextField
         label="생년월일"
         type="date"
