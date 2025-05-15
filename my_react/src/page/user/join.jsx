@@ -76,7 +76,7 @@ const Register = () => {
       birthdayRef.current?.focus();
       return;
     }
-
+    console.log('birthday:', birthday);
     if (!isEmailVerified) {
       showAlert('이메일 인증을 완료해주세요.');
       emailRef.current?.focus();
@@ -142,6 +142,8 @@ const Register = () => {
       showAlert('서버 오류가 발생했습니다.');
     }
   };
+
+
   return (
     <Box
       sx={{
@@ -233,7 +235,13 @@ const Register = () => {
         margin="normal"
         value={email}
         inputRef={emailRef}
-        onChange={(e) => setEmail(e.target.value)}
+        // 이메일 변경 시 인증 초기화
+        onChange={(e) => {
+          setEmail(e.target.value);
+          setIsEmailVerified(false);
+          setEmailSent(false);
+          setEmailCode('');
+        }}
         onKeyPress={handleKeyPress}
       />
       <Button
