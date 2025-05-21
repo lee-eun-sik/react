@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useRegisterMutation } from '../../features/user/userApi';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { TextField, Button, Box, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useCmDialog } from '../../cm/CmDialogUtil';  
 import { CmUtil } from '../../cm/CmUtil';
 
@@ -13,18 +13,18 @@ const Register = () => {
   const [gender, setGender] = useState('');
   const [phonenumber, setPhonenumber] = useState('');
   const [email, setEmail] = useState('');
-  const [birthday, setBirthday] = useState('');
+  const [birthdate, setBirthdate] = useState('');
   const userIdRef = useRef();
   const passwordRef = useRef();
   const password_confirmRef = useRef();
   const usernameRef = useRef();
   const phonenumberRef = useRef();
   const emailRef = useRef();
-  const birthdayRef= useRef();
+  const birthdateRef= useRef();
   const [emailCode, setEmailCode] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
-
+ 
   const { showAlert } = useCmDialog();
  
   const [register] = useRegisterMutation();
@@ -71,19 +71,20 @@ const Register = () => {
       return;
     }
 
-    if (CmUtil.isEmpty(birthday) || !CmUtil.isValidDate(birthday)) {
+    if (CmUtil.isEmpty(birthdate) || !CmUtil.isValidDate(birthdate)) {
       showAlert('유효한 생년월일을 YYYY-MM-DD 형식으로 입력해주세요.');
-      birthdayRef.current?.focus();
+      birthdateRef.current?.focus();
       return;
     }
-    console.log('birthday:', birthday);
+    console.log('birthdate:', birthdate);
     if (!isEmailVerified) {
       showAlert('이메일 인증을 완료해주세요.');
       emailRef.current?.focus();
       return;
     }
+   
     try {
-      const response = await register({ userId, password, username, email, gender, phonenumber, birthday }).unwrap();
+      const response = await register({ userId, password, username, email, gender, phonenumber, birthdate }).unwrap();
       if (response.success) {
         showAlert("회원가입에 성공 하셨습니다. 로그인화면으로 이동합니다.", () => { navigate('/user/login.do'); });
       } else {
@@ -217,7 +218,7 @@ const Register = () => {
           /> 여성
         </label>
       </Box>
-
+      
       <TextField
         label="전화번호"
         fullWidth
@@ -272,14 +273,15 @@ const Register = () => {
           </Button>
         </>
       )}
+      
       <TextField
         label="생년월일"
         type="date"
         fullWidth
         margin="normal"
-        value={birthday}
-        inputRef={birthdayRef}
-        onChange={(e) => setBirthday(e.target.value)}
+        value={birthdate}
+        inputRef={birthdateRef}
+        onChange={(e) => setBirthdate(e.target.value)}
         InputLabelProps={{ shrink: true }}
         onKeyPress={handleKeyPress}
       />
