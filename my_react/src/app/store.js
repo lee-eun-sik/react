@@ -3,7 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { userApi } from "../features/user/userApi";
 import { boardApi } from "../features/board/boardApi";
 import { fileApi } from "../features/file/fileApi";
-
+import { findApi} from "../features/find/findApi";
 import useReducer from "../features/user/userSlice";
 import storageSession from "redux-persist/lib/storage/session"; // sessionStorage로 변경
 import { persistReducer, persistStore } from "redux-persist";
@@ -24,6 +24,7 @@ const rootReducer = combineReducers({
     [fileApi.reducerPath]: fileApi.reducer,
     [reservationApi.reducerPath]: reservationApi.reducer,
     [memberApi.reducerPath]: memberApi.reducer,
+    [findApi.reducerPath]: findApi.reducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -33,7 +34,9 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: false
-        }).concat(userApi.middleware, boardApi.middleware, fileApi.middleware, reservationApi.middleware, memberApi.middleware)// 넣어주고 관리하기
+        }).concat(userApi.middleware, boardApi.middleware, fileApi.middleware, reservationApi.middleware, memberApi.middleware
+            , findApi.middleware
+        )// 넣어주고 관리하기
 });
 
 export const persistor = persistStore(store);
