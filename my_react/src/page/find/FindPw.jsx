@@ -16,8 +16,8 @@ const FindPw = () => {
   const [phonenumber, setPhonenumber] = useState('');
   const phonenumberRef = useRef();
 
-  const [birthdate, setBirthdate] = useState('');
-  const birthdateRef = useRef();
+  const [birthDate, setBirthDate] = useState('');
+  const birthDateRef = useRef();
 
   const [email, setEmail] = useState('');
   const emailRef = useRef();
@@ -52,9 +52,9 @@ const FindPw = () => {
     }
 
     
-    if (CmUtil.isEmpty(birthdate) || !CmUtil.isValidDate(birthdate)) {
+    if (CmUtil.isEmpty(birthDate) || !CmUtil.isValidDate(birthDate)) {
         showAlert('유효한 생년월일을 YYYY-MM-DD 형식으로 입력해주세요.');
-        birthdateRef.current?.focus();
+        birthDateRef.current?.focus();
         return;
     }
 
@@ -73,7 +73,7 @@ const FindPw = () => {
           userId,  
           username,
           phonenumber,
-          birthdate,
+          birthDate,
           email
         })
       });
@@ -124,7 +124,6 @@ const FindPw = () => {
         const data = await res.json();
         if (data.success) {
             showAlert("임시 비밀번호가 이메일로 전송되었습니다.");
-            navigate("/login"); // 예: 로그인 페이지로 이동
         } else {
             showAlert(data.message || "비밀번호 찾기에 실패했습니다.");
         }
@@ -227,9 +226,9 @@ const FindPw = () => {
             type="date"
             fullWidth
             margin="normal"
-            value={birthdate}
-            inputRef={birthdateRef}
-            onChange={(e) => setBirthdate(e.target.value)}
+            value={birthDate}
+            inputRef={birthDateRef}
+            onChange={(e) => setBirthDate(e.target.value)}
             InputLabelProps={{ shrink: true }}
             onKeyPress={handleKeyPress}
         />

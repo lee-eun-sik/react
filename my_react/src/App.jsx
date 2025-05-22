@@ -33,8 +33,8 @@ const App = () => {
         <Route path="/user/userInfo.do" element={<LayoutNoLogin><UserInfo/></LayoutNoLogin>} />
         <Route path="/reservation/list.do" element={<LayoutNoLogin><ReservationList/></LayoutNoLogin>} />
         <Route path="/member/list.do" element={<LayoutNoLogin><Memberlist/></LayoutNoLogin>} />
-        <Route path="/find/findId.do" element={<LayoutNoLogin><FindId/></LayoutNoLogin>} />
-        <Route path="/find/findPw.do" element={<LayoutNoLogin><FindPw/></LayoutNoLogin>} />
+        <Route path="/find/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
+        <Route path="/find/findPw.do" element={<LayoutNoLogin><FindPw /></LayoutNoLogin>} />
       </Routes>
       
   );
