@@ -7,16 +7,16 @@ export const findApi = createApi({
     reducerPath: 'findApi',
     baseQuery: baseQueryWithAuthHandler,
     endpoints: (builder) => ({
-        FindIdByEmail: builder.mutation({
+        FindId: builder.mutation({
             query: (credentials) => ({
-              url: '/find/find-id-by-email.do',
+              url: '/find/FindId.do',
               method: 'POST',
               body: credentials, 
             }),
         }),
-        FindIdByPhone: builder.mutation({
+        FindPw: builder.mutation({
             query: (credentials) => ({
-              url: '/find/findIdByPhone.do',
+              url: '/find/FindPw.do',
               method: 'POST',
               body: credentials,
             }),
@@ -25,6 +25,6 @@ export const findApi = createApi({
 });
 
 export const {
-    useFindIdByEmailMutation,
-    useFindIdByPhoneMutation,
+    useFindIdMutation,
+    useFindPwMutation,
 } = findApi;
