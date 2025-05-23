@@ -123,9 +123,9 @@ const FindPw = () => {
         });
         const data = await res.json();
         if (data.success) {
-            showAlert("임시 비밀번호가 이메일로 전송되었습니다.");
+            showAlert("사용자 인증이 완료되었습니다.");
         } else {
-            showAlert(data.message || "비밀번호 찾기에 실패했습니다.");
+            showAlert(data.message || "인증번호를 다시 입력해주세요.");
         }
       } catch (e) {
         showAlert('서버 오류가 발생했습니다.');

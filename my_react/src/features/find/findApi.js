@@ -21,10 +21,18 @@ export const findApi = createApi({
               body: credentials,
             }),
         }),
+        ResetPassword: builder.mutation({
+            query: (credentials) => ({
+              url: '/find/ResetPassword.do',
+              method: 'POST',
+              body: credentials,
+            }),
+        }),
     }),
 });
 
 export const {
     useFindIdMutation,
     useFindPwMutation,
+    useResetPasswordMutation,
 } = findApi;

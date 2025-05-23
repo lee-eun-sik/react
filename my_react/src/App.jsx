@@ -16,6 +16,7 @@ import Memberlist from './page/member/Memberlist';
 
 import FindId from './page/find/FindId';
 import FindPw from './page/find/FindPw';
+import ResetPassword from './page/find/ResetPassword';
 const App = () => {
   const navigate = useNavigate();
 
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/member/list.do" element={<LayoutNoLogin><Memberlist/></LayoutNoLogin>} />
         <Route path="/find/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/find/findPw.do" element={<LayoutNoLogin><FindPw /></LayoutNoLogin>} />
+        <Route path="/find/resetPassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
       </Routes>
       
   );
