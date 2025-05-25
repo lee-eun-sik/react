@@ -8226,6 +8226,11 @@ react-is@^19.1.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.1.0.tgz#805bce321546b7e14c084989c77022351bbdd11b"
   integrity sha512-Oe56aUPnkHyyDxxkvqtd7KkdQP5uIUfHxd5XTb3wE9d/kRnZLmKbDB0GWk919tdQ+mxxPtG6EAs6RMT6i1qtHg==
 
+react-naver-login@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.npmjs.org/react-naver-login/-/react-naver-login-0.1.4.tgz#d5b5a15632d810c397909c33c642adde60d1656b"
+  integrity sha512-ZFciTw96TyqSmCNjNqTqa8VeP1Y0Hl7Ult9uN6+Y6egpBSjLU8IwB1Y3gfltZYrPQC9uoqr6nICi4SX4JYhoGQ==
+
 react-redux@^9.2.0:
   version "9.2.0"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-9.2.0.tgz#96c3ab23fb9a3af2cb4654be4b51c989e32366f5"

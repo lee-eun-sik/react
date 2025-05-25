@@ -9,18 +9,13 @@ const Register = () => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [password_confirm, setPassword_confirm] = useState('');
-  const [username, setUsername] = useState('');
-  const [gender, setGender] = useState('');
-  const [phonenumber, setPhonenumber] = useState('');
   const [email, setEmail] = useState('');
-  const [birthdate, setBirthdate] = useState('');
+  const [nickname, setNickName] = useState('');
   const userIdRef = useRef();
   const passwordRef = useRef();
   const password_confirmRef = useRef();
-  const usernameRef = useRef();
-  const phonenumberRef = useRef();
   const emailRef = useRef();
-  const birthdateRef= useRef();
+  const nicknameRef =useRef();
   const [emailCode, setEmailCode] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -31,6 +26,12 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleRegisterClick = async () => {
+    if (CmUtil.isEmpty(nickname)) {
+      showAlert('닉네임 입력해주세요.');
+      nicknameRef.current?.focus();
+      return;
+    }
+
     if (CmUtil.isEmpty(userId)) {
       showAlert('아이디를 입력해주세요.');
       userIdRef.current?.focus();
@@ -48,17 +49,7 @@ const Register = () => {
       return;
     }
 
-    if (CmUtil.isEmpty(username)) {
-      showAlert('이름을 입력해주세요.');
-      usernameRef.current?.focus();
-      return;
-    }
-
-    if (CmUtil.isEmpty(phonenumber)) {
-      showAlert("전화번호를 입력해주세요.");
-      phonenumberRef.current?.focus();
-      return;
-    }
+    
     if (CmUtil.isEmpty(email)) {
       showAlert('이메일을 입력해주세요.');
       emailRef.current?.focus();
@@ -71,20 +62,11 @@ const Register = () => {
       return;
     }
 
-    if (CmUtil.isEmpty(birthdate) || !CmUtil.isValidDate(birthdate)) {
-      showAlert('유효한 생년월일을 YYYY-MM-DD 형식으로 입력해주세요.');
-      birthdateRef.current?.focus();
-      return;
-    }
-    console.log('birthdate:', birthdate);
-    if (!isEmailVerified) {
-      showAlert('이메일 인증을 완료해주세요.');
-      emailRef.current?.focus();
-      return;
-    }
+   
+    
    
     try {
-      const response = await register({ userId, password, username, email, gender, phonenumber, birthdate }).unwrap();
+      const response = await register({ nickname, userId, password, email}).unwrap();
       if (response.success) {
         showAlert("회원가입에 성공 하셨습니다. 로그인화면으로 이동합니다.", () => { navigate('/user/login.do'); });
       } else {
@@ -158,6 +140,15 @@ const Register = () => {
       }}
     >
       <Typography variant="h4" gutterBottom>회원가입</Typography>
+      <TextField
+        label="닉네임"
+        fullWidth
+        margin="normal"
+        value={nickname}
+        inputRef={nicknameRef}
+        onChange={(e) => setNickName(e.target.value)}
+        onKeyPress={handleKeyPress}
+      />
 
       <TextField
         label="아이디"
@@ -187,45 +178,6 @@ const Register = () => {
         value={password_confirm}
         inputRef={password_confirmRef}
         onChange={(e) => setPassword_confirm(e.target.value)}
-        onKeyPress={handleKeyPress}
-      />
-
-      <TextField
-        label="이름"
-        fullWidth
-        margin="normal"
-        value={username}
-        inputRef={usernameRef}
-        onChange={(e) => setUsername(e.target.value)}
-        onKeyPress={handleKeyPress}
-      />
-      <Box display="flex" alignItems="center" gap={2} width="100%">
-        <Typography>성별</Typography>
-        <label>
-          <input
-            type="radio"
-            value="남성"
-            checked={gender === 'M'}
-            onChange={() => setGender('M')}
-          /> 남성
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="여성"
-            checked={gender === 'F'}
-            onChange={() => setGender('F')}
-          /> 여성
-        </label>
-      </Box>
-      
-      <TextField
-        label="전화번호"
-        fullWidth
-        margin="normal"
-        value={phonenumber}
-        inputRef={phonenumberRef}
-        onChange={(e) => setPhonenumber(e.target.value)}
         onKeyPress={handleKeyPress}
       />
 
@@ -274,17 +226,6 @@ const Register = () => {
         </>
       )}
       
-      <TextField
-        label="생년월일"
-        type="date"
-        fullWidth
-        margin="normal"
-        value={birthdate}
-        inputRef={birthdateRef}
-        onChange={(e) => setBirthdate(e.target.value)}
-        InputLabelProps={{ shrink: true }}
-        onKeyPress={handleKeyPress}
-      />
       <Button
         onClick={handleRegisterClick}
         variant="contained"
