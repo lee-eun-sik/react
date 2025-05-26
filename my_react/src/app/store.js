@@ -10,7 +10,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import { combineReducers } from "redux";
 import { reservationApi } from "../features/reservation/reservationApi";
 import { memberApi } from "../features/member/memberApi";
-
+import { chatApi } from "../features/chat/chatApi";
 const persistConfig = {
     key: 'root',
     storage: storageSession, // sessionStorage로 변경
@@ -35,7 +35,7 @@ export const store = configureStore({
         getDefaultMiddleware({
             serializableCheck: false
         }).concat(userApi.middleware, boardApi.middleware, fileApi.middleware, reservationApi.middleware, memberApi.middleware
-            , findApi.middleware
+            , findApi.middleware, chatApi.middleware 
         )// 넣어주고 관리하기
 });
 
