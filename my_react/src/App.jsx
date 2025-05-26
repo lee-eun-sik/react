@@ -18,7 +18,7 @@ import FindId from './page/find/FindId';
 import FindPw from './page/find/FindPw';
 import ResetPassword from './page/find/ResetPassword';
 
-import NaverCallback from './page/naver/NaverCallback';
+
 const App = () => {
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ const App = () => {
         <Route path="/find/findId.do" element={<LayoutNoLogin><FindId /></LayoutNoLogin>} />
         <Route path="/find/findPw.do" element={<LayoutNoLogin><FindPw /></LayoutNoLogin>} />
         <Route path="/find/resetPassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
-        <Route path="/naver/callback" element={<NaverCallback />} />
+        
       </Routes>
       
   );

@@ -4,20 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useCmDialog } from '../../cm/CmDialogUtil';  
 import { CmUtil } from '../../cm/CmUtil';
-
+import { useEffect } from 'react';
 
 const FindPw = () => {
   const [userId, setUserId] = useState('');
   const userIdRef = useRef();
-
-  const [username, setUsername] = useState('');
-  const usernameRef = useRef();
-
-  const [phonenumber, setPhonenumber] = useState('');
-  const phonenumberRef = useRef();
-
-  const [birthDate, setBirthDate] = useState('');
-  const birthDateRef = useRef();
 
   const [email, setEmail] = useState('');
   const emailRef = useRef();
@@ -26,35 +17,43 @@ const FindPw = () => {
   const [emailSent, setEmailSent] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
 
-  
+  const [timer, setTimer] = useState(180); // 3분
+  const timerRef = useRef();
   
   const { showAlert } = useCmDialog();
   const [findPw] = useFindPwMutation();
   const navigate = useNavigate();
 
-  const handleFindPwClick = async ()  => {
+  const [findSuccess, setFindSuccess] = useState(false); //  ✅ 성공 여부 상태 추가
+
+  
+  useEffect(() => {
+    if (emailSent) {
+      timerRef.current = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(timerRef.current);
+            setEmailSent(false);
+            showAlert("인증번호 입력 시간이 만료되었습니다. 다시 요청해주세요.");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(timerRef.current);
+  }, [emailSent]);
+
+  const formatTime = (seconds) => {
+    const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const sec = String(seconds % 60).padStart(2, '0');
+    return `${min}:${sec}`;
+  };
+  const handleFindPwClick = async () => {
     if (CmUtil.isEmpty(userId)) {
         showAlert("ID를 입력해주세요.");
         userIdRef.current?.focus();
-        return;
-    }
-
-    if (CmUtil.isEmpty(username)) {
-        showAlert("이름을 입력해주세요.");
-        usernameRef.current?.focus();
-        return;
-    }
-
-    if (CmUtil.isEmpty(phonenumber)) {
-        showAlert("전화번호를 입력해주세요.");
-        phonenumberRef.current?.focus();
-        return;
-    }
-
-    
-    if (CmUtil.isEmpty(birthDate) || !CmUtil.isValidDate(birthDate)) {
-        showAlert('유효한 생년월일을 YYYY-MM-DD 형식으로 입력해주세요.');
-        birthDateRef.current?.focus();
         return;
     }
 
@@ -69,15 +68,16 @@ const FindPw = () => {
       const res = await fetch(`${BACKEND_URL}/api/find/findPw.do`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId,  
-          username,
-          phonenumber,
-          birthDate,
-          email
-        })
+        body: JSON.stringify({ userId, email })
       });
+      const data = await res.json();
 
+      if (data.success) {
+        showAlert("계정 확인 완료. 비밀번호를 재설정해주세요.");
+        navigate('/find/resetPassword.do', { state: { userId } }); // ✅ 페이지 이동 + userId 전달
+      } else {
+        showAlert(data.message || "입력한 정보가 일치하지 않습니다.");
+      }
     } catch (e) {
       showAlert('서버 오류가 발생했습니다.');
     }
@@ -103,7 +103,11 @@ const FindPw = () => {
         const data = await res.json();
   
         if (data.success) {
-          setEmailSent(true);
+          clearInterval(timerRef.current); // 기존 타이머 제거
+          setTimer(180);                   // 타이머 초기화
+          setEmailSent(true);             // 이메일 인증 활성화
+          setIsEmailVerified(false);      // 이메일 인증 상태 초기화
+          setEmailCode('');               // 인증 코드 입력 초기화
           showAlert('인증번호가 이메일로 전송되었습니다.');
         } else {
           showAlert('인증번호 전송에 실패했습니다.');
@@ -145,113 +149,93 @@ const FindPw = () => {
       }}
     > 
       <Typography variant="h4" gutterBottom>비밀번호 찾기</Typography>
-
-      <TextField
-        label="아이디"
-        fullWidth
-        margin="normal"
-        value={userId}
-        inputRef={userIdRef}
-        onChange={(e) => setUserId(e.target.value)}
-        onKeyPress={handleKeyPress}
-        />
-    
+  {/* ✅ 성공 시 메시지 표시 */}
+      {findSuccess ? (
+        <>
+          <Typography variant="h6" sx={{ mt: 4, textAlign: 'center' }}>
+            비밀번호 찾기가 성공했습니다! 임시 비밀번호를 보내드렸으니 입력하신 이메일 메일함을 열람해주세요.
+          </Typography>
+          <Button
+            variant="contained"
+            sx={{ mt: 3 }}
+            onClick={() => navigate('/user/login.do')}
+          >
+            비밀번호 재설정
+          </Button>
+        </>
+      ) : (
+        <>
           <TextField
-            label="이름"
+            label="아이디"
             fullWidth
             margin="normal"
-            value={username}
-            inputRef={usernameRef}
-            onChange={(e) => setUsername(e.target.value)}
+            value={userId}
+            inputRef={userIdRef}
+            onChange={(e) => setUserId(e.target.value)}
             onKeyPress={handleKeyPress}
           />
 
           <TextField
-            label="전화번호"
-            fullWidth
-            margin="normal"
-            value={phonenumber}
-            inputRef={phonenumberRef}
-            onChange={(e) => setPhonenumber(e.target.value)}
-            onKeyPress={handleKeyPress}
-        />
-    
-        <TextField
             label="이메일"
             type="email"
             fullWidth
             margin="normal"
             value={email}
             inputRef={emailRef}
-            // 이메일 변경 시 인증 초기화
             onChange={(e) => {
-            setEmail(e.target.value);
-            setIsEmailVerified(false);
-            setEmailSent(false);
-            setEmailCode('');
+              setEmail(e.target.value);
+              setIsEmailVerified(false);
+              setEmailSent(false);
+              setEmailCode('');
             }}
             onKeyPress={handleKeyPress}
-        />
-        <Button
+          />
+
+          <Button
             onClick={handleSendEmailCode}
             variant="outlined"
             fullWidth
             sx={{ mt: 1 }}
-        >
+          >
             인증번호 전송
-        </Button>
-    
-        {emailSent && (
+          </Button>
+
+          {emailSent && (
             <>
-            <TextField
+              <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                남은 시간: {formatTime(timer)}
+              </Typography>
+              <TextField
                 label="인증번호 입력"
                 fullWidth
                 margin="normal"
                 value={emailCode}
                 onChange={(e) => setEmailCode(e.target.value)}
-            />
-            <Button
+              />
+              
+              <Button
                 onClick={handleVerifyEmailCode}
                 variant="contained"
                 color="success"
                 fullWidth
-            >
+              >
                 인증번호 확인
-            </Button>
+              </Button>
             </>
-        )}
-        
-        <TextField
-            label="생년월일"
-            type="date"
-            fullWidth
-            margin="normal"
-            value={birthDate}
-            inputRef={birthDateRef}
-            onChange={(e) => setBirthDate(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-            onKeyPress={handleKeyPress}
-        />
-        <Button
+          )}
+
+          <Button
             onClick={handleFindPwClick}
             variant="contained"
             color="primary"
             fullWidth
             sx={{ marginTop: 2 }}
-        >
+          >
             비밀번호 찾기
-        </Button>
-        <Button
-            onClick={() => navigate('/')}
-            variant="outlined"
-            color="secondary"
-            fullWidth
-            sx={{ marginTop: 2 }}
-        >
-            메인으로 돌아가기
-        </Button>
-   </Box>  
-  );
-  
+          </Button>
+        </>
+      )}
+    </Box>
+  )
 };
 export default FindPw;

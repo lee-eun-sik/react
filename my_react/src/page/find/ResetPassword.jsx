@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useResetPasswordMutation } from '../../features/find/findApi';
 import { useCmDialog } from '../../cm/CmDialogUtil';
 import { CmUtil } from '../../cm/CmUtil';
 
 const ResetPassword = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { showAlert } = useCmDialog();
 
-  // Redux store에서 로그인된 사용자 정보 가져오기
-  const userState = useSelector((state) => state.user);
-  const user = userState.user;  // 실제 로그인된 유저 정보
-  const userId = user?.userId || user?.id;
-  console.log('Redux user:', user);
+    // ✅ useLocation으로 전달된 userId 사용
+  const userId = location.state?.userId;
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [resetPassword] = useResetPasswordMutation();
 
+  
   const handleReset = async (e) => {
     e.preventDefault();
 
@@ -38,20 +37,16 @@ const ResetPassword = () => {
     }
 
     if (!userId) {
-      showAlert('사용자 정보를 찾을 수 없습니다.');
+      showAlert('사용자 정보가 유실되었습니다.');
+      navigate('/user/findPw.do');
       return;
     }
 
     try {
       await resetPassword({ userId, newPassword, confirmPassword }).unwrap();
       showAlert('비밀번호가 성공적으로 변경되었습니다.');
-
-      // 보안상 비밀번호 재설정 후 로그아웃 처리 권장
-      // 예: dispatch(logoutAction());
-
-      navigate('/');
+      navigate('/user/login.do');
     } catch (error) {
-      console.error('Reset password error:', error);
       showAlert(error?.data?.message || '비밀번호 변경 중 오류가 발생했습니다.');
     }
   };

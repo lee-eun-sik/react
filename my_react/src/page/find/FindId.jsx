@@ -4,17 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import { useCmDialog } from '../../cm/CmDialogUtil';  
 import { CmUtil } from '../../cm/CmUtil';
-
+import { useEffect } from 'react';
 const FindId = () => {
-  const [username, setUsername] = useState('');
-  const usernameRef = useRef();
-
-  const [phonenumber, setPhonenumber] = useState('');
-  const phonenumberRef = useRef();
-
-  const [birthdate, setBirthdate] = useState('');
-  const birthdateRef = useRef();
-
+  
   const [email, setEmail] = useState('');
   const emailRef = useRef();
 
@@ -23,8 +15,34 @@ const FindId = () => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const [showResult, setShowResult] = useState(false);
-  const [foundId, setFoundId] = useState('');
+  const [foundId, setFoundId] = useState(null);
+
+  const [timer, setTimer] = useState(180); // 3분
+  const timerRef = useRef();
+
+  useEffect(() => {
+      if (emailSent) {
+        timerRef.current = setInterval(() => {
+          setTimer((prev) => {
+            if (prev <= 1) {
+              clearInterval(timerRef.current);
+              setEmailSent(false);
+              showAlert("인증번호 입력 시간이 만료되었습니다. 다시 요청해주세요.");
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      }
   
+      return () => clearInterval(timerRef.current);
+    }, [emailSent]);
+  
+  const formatTime = (seconds) => {
+    const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const sec = String(seconds % 60).padStart(2, '0');
+    return `${min}:${sec}`;
+  };
   const { showAlert } = useCmDialog();
   const [findId] = useFindIdMutation();
   const navigate = useNavigate();
@@ -35,23 +53,6 @@ const FindId = () => {
       return;
     }
 
-    if (CmUtil.isEmpty(username)) {
-      showAlert('이름을 입력해주세요.');
-      usernameRef.current?.focus();
-      return;
-    }
-
-    if (CmUtil.isEmpty(phonenumber)) {
-      showAlert("전화번호를 입력해주세요.");
-      phonenumberRef.current?.focus();
-      return;
-    }
-
-    if (CmUtil.isEmpty(birthdate) || !CmUtil.isValidDate(birthdate)) {
-      showAlert('유효한 생년월일을 YYYY-MM-DD 형식으로 입력해주세요.');
-      birthdateRef.current?.focus();
-      return;
-    }
 
     if (CmUtil.isEmpty(email) || !CmUtil.isEmail(email)) {
       showAlert('유효한 이메일 형식을 입력해주세요.');
@@ -65,9 +66,6 @@ const FindId = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username,
-          phonenumber,
-          birthdate,
           email
         })
       });
@@ -75,7 +73,7 @@ const FindId = () => {
       const data = await res.json();
 
       if (data.success && data.data?.list && data.data.list.length > 0) {
-        setFoundId(data.data.list);  // 객체 배열 그대로 저장 (userId, createDt 포함)
+        setFoundId(data.data.list[0]);  // 첫째 배열 그대로 저장 (userId, createDt 포함)
         setShowResult(true);
       } else {
         showAlert(data.message || '일치하는 사용자 정보를 찾을 수 없습니다.');
@@ -101,7 +99,11 @@ const FindId = () => {
       const data = await res.json();
 
       if (data.success) {
-        setEmailSent(true);
+        clearInterval(timerRef.current); // 기존 타이머 제거
+        setTimer(180);                   // 타이머 초기화
+        setEmailSent(true);             // 이메일 인증 활성화
+        setIsEmailVerified(false);      // 이메일 인증 상태 초기화
+        setEmailCode('');               // 인증 코드 입력 초기화
         showAlert('인증번호가 이메일로 전송되었습니다.');
       } else {
         showAlert('인증번호 전송에 실패했습니다.');
@@ -138,10 +140,7 @@ const FindId = () => {
 
       {!showResult && (
         <>
-          <TextField label="이름" fullWidth margin="normal" value={username} inputRef={usernameRef}
-            onChange={(e) => setUsername(e.target.value)} />
-          <TextField label="전화번호" fullWidth margin="normal" value={phonenumber} inputRef={phonenumberRef}
-            onChange={(e) => setPhonenumber(e.target.value)} />
+          
           <TextField label="이메일" type="email" fullWidth margin="normal" value={email} inputRef={emailRef}
             onChange={(e) => {
               setEmail(e.target.value);
@@ -153,6 +152,9 @@ const FindId = () => {
 
           {emailSent && (
             <>
+              <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                남은 시간: {formatTime(timer)}
+              </Typography>
               <TextField label="인증번호 입력" fullWidth margin="normal" value={emailCode}
                 onChange={(e) => setEmailCode(e.target.value)} />
               <Button onClick={handleVerifyEmailCode} variant="contained" color="success" fullWidth>
@@ -161,36 +163,35 @@ const FindId = () => {
             </>
           )}
 
-          <TextField label="생년월일" type="date" fullWidth margin="normal" value={birthdate} inputRef={birthdateRef}
-            onChange={(e) => setBirthdate(e.target.value)} InputLabelProps={{ shrink: true }} />
 
           <Button onClick={handleFindIdClick} variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
             아이디 찾기
           </Button>
-          <Button onClick={() => navigate('/')} variant="outlined" color="secondary" fullWidth sx={{ mt: 2 }}>
-            가입취소
-          </Button>
+          
         </>
       )}
 
       {/* 결과 출력부 */}
-      {showResult && (
+      {showResult && foundId && (
         <>
-          <Typography variant="h6" sx={{ mt: 4 }}>회원님의 아이디는 다음과 같습니다:</Typography>
+          <Typography variant="h6" sx={{ mt: 4 }}>
+            회원님의 아이디는 다음과 같습니다:
+          </Typography>
           <Box sx={{ mt: 2 }}>
-            {foundId.map((user, index) => (
-              <Box key={index} sx={{ mb: 1 }}>
-                <Typography variant="body1" sx={{ color: 'black' }}>
-                  아이디: {user.userId} &nbsp;&nbsp; 가입일자: {user.createDt}
-                </Typography>
-              </Box>
-            ))}
+            <Typography variant="body1" sx={{ color: 'black', fontWeight: 'bold' }}>
+              아이디 : {foundId.userId}
+            </Typography>
+            <Typography variant="body1" sx={{ color: 'black', fontWeight: 'bold', mt: 1 }}>
+              가입일자 : {foundId.createDt}
+            </Typography>
           </Box>
-          <Button onClick={() => navigate('/user/login.do')} variant="contained" fullWidth sx={{ mt: 3 }}>
+          <Button
+            onClick={() => navigate('/user/login.do')}
+            variant="contained"
+            fullWidth
+            sx={{ mt: 3 }}
+          >
             로그인
-          </Button>
-          <Button onClick={() => navigate('/')} variant="outlined" fullWidth sx={{ mt: 2 }}>
-            메인으로 돌아가기
           </Button>
         </>
       )}

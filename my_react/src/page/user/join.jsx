@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography} from '@mui/material';
 import { useCmDialog } from '../../cm/CmDialogUtil';  
 import { CmUtil } from '../../cm/CmUtil';
-
+import { useEffect } from 'react';
 const Register = () => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +19,32 @@ const Register = () => {
   const [emailCode, setEmailCode] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
- 
+  const [timer, setTimer] = useState(180); // 3분
+  const timerRef = useRef();
+
+  useEffect(() => {
+      if (emailSent) {
+        timerRef.current = setInterval(() => {
+          setTimer((prev) => {
+            if (prev <= 1) {
+              clearInterval(timerRef.current);
+              setEmailSent(false);
+              showAlert("인증번호 입력 시간이 만료되었습니다. 다시 요청해주세요.");
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      }
+  
+      return () => clearInterval(timerRef.current);
+    }, [emailSent]);
+  
+  const formatTime = (seconds) => {
+    const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const sec = String(seconds % 60).padStart(2, '0');
+    return `${min}:${sec}`;
+  };
   const { showAlert } = useCmDialog();
  
   const [register] = useRegisterMutation();
@@ -96,7 +121,11 @@ const Register = () => {
       });
       const data = await res.json();
       if (data.success) {
-        setEmailSent(true);
+        clearInterval(timerRef.current); // 기존 타이머 제거
+        setTimer(180);                   // 타이머 초기화
+        setEmailSent(true);             // 이메일 인증 활성화
+        setIsEmailVerified(false);      // 이메일 인증 상태 초기화
+        setEmailCode('');               // 인증 코드 입력 초기화
         showAlert('인증번호가 이메일로 전송되었습니다.');
       } else {
         showAlert('인증번호 전송에 실패했습니다.');
@@ -141,7 +170,7 @@ const Register = () => {
     >
       <Typography variant="h4" gutterBottom>회원가입</Typography>
       <TextField
-        label="닉네임"
+        label="닉네임*"
         fullWidth
         margin="normal"
         value={nickname}
@@ -151,7 +180,7 @@ const Register = () => {
       />
 
       <TextField
-        label="아이디"
+        label="아이디*"
         fullWidth
         margin="normal"
         value={userId}
@@ -161,7 +190,7 @@ const Register = () => {
       />
 
       <TextField
-        label="비밀번호"
+        label="비밀번호*"
         type="password"
         fullWidth
         margin="normal"
@@ -171,7 +200,7 @@ const Register = () => {
         onKeyPress={handleKeyPress}
       />
       <TextField
-        label="비밀번호확인"
+        label="비밀번호확인*"
         type="password"
         fullWidth
         margin="normal"
@@ -182,7 +211,7 @@ const Register = () => {
       />
 
       <TextField
-        label="이메일"
+        label="이메일*"
         type="email"
         fullWidth
         margin="normal"
@@ -208,8 +237,11 @@ const Register = () => {
 
       {emailSent && (
         <>
+          <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+            남은 시간: {formatTime(timer)}
+          </Typography>
           <TextField
-            label="인증번호 입력"
+            label="인증번호 확인*"
             fullWidth
             margin="normal"
             value={emailCode}
@@ -234,15 +266,6 @@ const Register = () => {
         sx={{ marginTop: 2 }}
       >
         회원가입
-      </Button>
-      <Button
-        onClick={() => navigate('/')}
-        variant="outlined"
-        color="secondary"
-        fullWidth
-        sx={{ marginTop: 2 }}
-      >
-        가입취소
       </Button>
     </Box>
   );
