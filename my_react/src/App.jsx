@@ -18,7 +18,10 @@ import FindId from './page/find/FindId';
 import FindPw from './page/find/FindPw';
 import ResetPassword from './page/find/ResetPassword';
 import ChatRoom from './page/chat/ChatRoom';
-
+import ActivityList from './page/calendar/CalendarView';
+import CalenderDairyPage from './page/calendar/CalendarDairyPage';
+import CalenderView from './page/calendar/CalendarView';
+import FilterBar from './page/calendar/FilterBar';
 const App = () => {
   const navigate = useNavigate();
 
@@ -40,6 +43,10 @@ const App = () => {
         <Route path="/find/findPw.do" element={<LayoutNoLogin><FindPw /></LayoutNoLogin>} />
         <Route path="/find/resetPassword.do" element={<LayoutNoLogin><ResetPassword /></LayoutNoLogin>} />
         <Route path="/chat/chatRoom.do" element={<LayoutNoLogin><ChatRoom/></LayoutNoLogin>} /> 
+        <Route path="/calendar/activityList.do" element={<LayoutNoLogin><ActivityList></ActivityList></LayoutNoLogin>} />
+        <Route path="/calendar/calendarDairyPage.do" element={<LayoutNoLogin><CalenderDairyPage></CalenderDairyPage></LayoutNoLogin>} />
+        <Route path="/calendar/calendarView.do" element={<LayoutNoLogin><CalenderView></CalenderView></LayoutNoLogin>} />
+        <Route path="/calendar/FilterBar.do" element={<LayoutNoLogin><FilterBar></FilterBar></LayoutNoLogin>} />      
       </Routes>
       
   );
