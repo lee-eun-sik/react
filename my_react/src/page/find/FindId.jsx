@@ -20,23 +20,10 @@ const FindId = () => {
   const [timer, setTimer] = useState(180); // 3분
   const timerRef = useRef();
 
-  useEffect(() => {
-      if (emailSent) {
-        timerRef.current = setInterval(() => {
-          setTimer((prev) => {
-            if (prev <= 1) {
-              clearInterval(timerRef.current);
-              setEmailSent(false);
-              showAlert("인증번호 입력 시간이 만료되었습니다. 다시 요청해주세요.");
-              return 0;
-            }
-            return prev - 1;
-          });
-        }, 1000);
-      }
   
+    useEffect(() => {
       return () => clearInterval(timerRef.current);
-    }, [emailSent]);
+    }, []);
   
   const formatTime = (seconds) => {
     const min = String(Math.floor(seconds / 60)).padStart(2, '0');
@@ -99,11 +86,26 @@ const FindId = () => {
       const data = await res.json();
 
       if (data.success) {
-        clearInterval(timerRef.current); // 기존 타이머 제거
-        setTimer(180);                   // 타이머 초기화
-        setEmailSent(true);             // 이메일 인증 활성화
-        setIsEmailVerified(false);      // 이메일 인증 상태 초기화
-        setEmailCode('');               // 인증 코드 입력 초기화
+        // 기존 타이머 제거 및 초기화
+        clearInterval(timerRef.current);
+        setTimer(180);
+        setEmailSent(true);
+        setIsEmailVerified(false);
+        setEmailCode('');
+
+        // 타이머 새로 시작
+        timerRef.current = setInterval(() => {
+          setTimer((prev) => {
+            if (prev <= 1) {
+              clearInterval(timerRef.current);
+              setEmailSent(false);
+              showAlert("인증번호 입력 시간이 만료되었습니다. 다시 요청해주세요.");
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+
         showAlert('인증번호가 이메일로 전송되었습니다.');
       } else {
         showAlert('인증번호 전송에 실패했습니다.');
@@ -112,7 +114,6 @@ const FindId = () => {
       showAlert('서버 오류가 발생했습니다.');
     }
   };
-
   const handleVerifyEmailCode = async () => {
     try {
       const BACKEND_URL = 'http://localhost:8081';
