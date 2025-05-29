@@ -34,9 +34,8 @@ const App = () => {
   return (
       <Routes>
 
-        <Route path="/" element={<LayoutLogin><Login /></LayoutLogin>} />
-        {/* <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} /> */}
-        {/* <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} /> */}
+        <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} />
+        <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} />
         <Route path="/user/join.do" element={<LayoutNoLogin><Join /></LayoutNoLogin>} />
         <Route path="/user/manager.do" element={<LayoutNoLogin><Manager/></LayoutNoLogin>} />
         <Route path="/user/main.do" element={<LayoutNoLogin><Main/></LayoutNoLogin>} />
