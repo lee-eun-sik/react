@@ -22,6 +22,8 @@ import ActivityList from './page/calendar/CalendarView';
 import CalenderDairyPage from './page/calendar/CalendarDairyPage';
 import CalenderView from './page/calendar/CalendarView';
 import FilterBar from './page/calendar/FilterBar';
+import PetForm from './page/pet/Pet_Form';
+import PetFormUpdate from './page/pet/Pet_Form_Update';
 const App = () => {
   const navigate = useNavigate();
 
@@ -31,8 +33,10 @@ const App = () => {
 
   return (
       <Routes>
-        <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} />
-        <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} />
+
+        <Route path="/" element={<LayoutLogin><Login /></LayoutLogin>} />
+        {/* <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} /> */}
+        {/* <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} /> */}
         <Route path="/user/join.do" element={<LayoutNoLogin><Join /></LayoutNoLogin>} />
         <Route path="/user/manager.do" element={<LayoutNoLogin><Manager/></LayoutNoLogin>} />
         <Route path="/user/main.do" element={<LayoutNoLogin><Main/></LayoutNoLogin>} />
@@ -47,6 +51,8 @@ const App = () => {
         <Route path="/calendar/calendarDairyPage.do" element={<LayoutNoLogin><CalenderDairyPage></CalenderDairyPage></LayoutNoLogin>} />
         <Route path="/calendar/calendarView.do" element={<LayoutNoLogin><CalenderView></CalenderView></LayoutNoLogin>} />
         <Route path="/calendar/FilterBar.do" element={<LayoutNoLogin><FilterBar></FilterBar></LayoutNoLogin>} />      
+        <Route path="/pet/petForm.do" element={<LayoutNoLogin><PetForm></PetForm></LayoutNoLogin>} />
+        <Route path="/pet/petFormUpdate.do" element={<LayoutNoLogin><PetFormUpdate></PetFormUpdate></LayoutNoLogin>} />
       </Routes>
       
   );
