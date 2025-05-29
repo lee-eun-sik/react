@@ -11,6 +11,7 @@ import { combineReducers } from "redux";
 import { reservationApi } from "../features/reservation/reservationApi";
 import { memberApi } from "../features/member/memberApi";
 import { chatApi } from "../features/chat/chatApi";
+import { petApi } from "../features/pet/petApi";
 const persistConfig = {
     key: 'root',
     storage: storageSession, // sessionStorage로 변경
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
     [fileApi.reducerPath]: fileApi.reducer,
     [reservationApi.reducerPath]: reservationApi.reducer,
     [memberApi.reducerPath]: memberApi.reducer,
-    [findApi.reducerPath]: findApi.reducer
+    [findApi.reducerPath]: findApi.reducer,
+    [petApi.reducerPath]: petApi.reducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -35,7 +37,7 @@ export const store = configureStore({
         getDefaultMiddleware({
             serializableCheck: false
         }).concat(userApi.middleware, boardApi.middleware, fileApi.middleware, reservationApi.middleware, memberApi.middleware
-            , findApi.middleware, chatApi.middleware 
+            , findApi.middleware, chatApi.middleware, petApi.middleware 
         )// 넣어주고 관리하기
 });
 
