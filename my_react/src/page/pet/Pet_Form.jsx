@@ -82,11 +82,11 @@ const Pet_Form = () => {
 
       <FormRow label="이름" value={name} onChange={setName} inputRef={nameRef} />
       <FormRow label="종류" value={species} onChange={setSpecies} inputRef={speciesRef} />
-      <FormRow label="특이 사항" value={notes} onChange={setNotes} inputRef={notesRef}/>
+      
 
       <DateInputRow label="입양일" value={adoptionDate} onChange={setAdoptionDate} />
       <DateInputRow label="생일" value={birthDate} onChange={setBirthDate} />
-
+      
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
         <Typography sx={{ width: '90px', fontSize: 14, fontWeight: 500 }}>성별</Typography>
         <RadioGroup row name="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
@@ -94,41 +94,97 @@ const Pet_Form = () => {
           <FormControlLabel value="수컷" control={<Radio size="small" />} label="수컷" />
         </RadioGroup>
       </Box>
-
+      <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
+        <Typography sx={{ fontSize: 14, fontWeight: 500, mb: 1 }}>특이 사항</Typography>
+          <InputBase
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            inputRef={notesRef}
+            multiline
+            inputProps={{
+              style: {
+                padding: 0,
+                paddingTop: 4, // 첫 줄 여유
+                fontSize: 13,
+              }
+            }}
+            sx={{
+              backgroundColor: '#D9D9D9',
+              borderRadius: '12px',
+              px: 2,
+              py: 1,
+              minHeight: 70,
+              textDecoration: 'none',
+              fontWeight: 'normal',
+              color: '#000',
+              display: 'flex',
+              alignItems: 'flex-start', // 텍스트 상단 정렬
+            }}
+          />
+      </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
         <Button type="submit" variant="contained" sx={{ backgroundColor: '#556B2F', borderRadius: '20px', px: 4, py: 1, fontSize: 14 }}>
           동물 등록
         </Button>
       </Box>
     </Box>
+
+    
   );
 };
 
-const FormRow = ({ label, value = '', onChange, multiline = false, inputRef }) => (
-  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-    <Typography sx={{ width: '90px', fontSize: 14, fontWeight: 500 }}>{label}</Typography>
-    <InputBase
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={`${label} 입력`}
-      multiline={multiline}
-      inputRef={inputRef}   // ← 추가
-      inputProps={{ style: { padding: 0 } }}
-      sx={{
-        flex: 1,
-        backgroundColor: '#E0E0E0',
-        borderRadius: '20px',
-        px: 2,
-        py: 0.8,
-        fontWeight: 'bold',
-        textAlign: 'left',
-        border: '1px solid #ccc',
-        '&:focus-within': { borderColor: '#1976d2' },
-        ...(multiline && { minHeight: 60 })
-      }}
-    />
-  </Box>
-);
+const FormRow = ({ label, value = '', onChange, multiline = false, inputRef, fieldKey = '' }) => {
+  // 필드 조건별 스타일 정의
+  let backgroundColor = '#E0E0E0';
+  let border = '1px solid #ccc';
+  let borderRadius = '20px';
+  let textDecoration = 'none';
+  let fontWeight = 'normal';
+  let color = 'inherit';
+  let minHeight = undefined;
+
+  if (fieldKey === 'notes') {
+    backgroundColor = '#D9D9D9';
+    fontWeight = 'bold';
+    color = '#000';
+    minHeight = 80;  // 3줄 정도 여유
+  }
+
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2}}>
+      <Typography sx={{ width: '90px', fontSize: 14, fontWeight: 500, mt: multiline ? '6px' : 0 }}>
+        {label}
+      </Typography>
+      <InputBase
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={`${label} 입력`}
+        multiline={multiline}
+        inputRef={inputRef}
+        inputProps={{
+          style: {
+            padding: 0,
+            textAlign: 'center', // <-- 중앙 정렬
+            ...(multiline ? { paddingTop: 4 } : {}),
+          }
+        }}
+        sx={{
+          width: '160px',
+          backgroundColor,
+          border,
+          borderRadius,
+          px: 2,
+          py: 1,
+          fontWeight,
+          textDecoration,
+          color,
+          ...(multiline && { minHeight }),
+        }}
+      />
+    </Box>
+    
+  );
+};
 
 const DateInputRow = ({ label, value, onChange }) => (
   <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -138,25 +194,32 @@ const DateInputRow = ({ label, value, onChange }) => (
         value={value}
         onChange={onChange}
         inputFormat="yyyy.MM.dd"
-        slotProps={{
-          textField: {
-            variant: 'standard',
-            InputProps: { disableUnderline: true },
-            placeholder: 'YYYY.MM.DD',
-            sx: {
-              flex: 1,
-              backgroundColor: '#E0E0E0',
-              borderRadius: '13px',
-              px: 2,
-              height: 40,
-              display: 'flex',
-              alignItems: 'center',
-              input: {
-                textAlign: 'center',
-                fontWeight: 'bold',
-              }
-            }
-          }
+        enableAccessibleFieldDOMStructure={false} // <-- 이 부분 추가
+        slots={{
+          textField: (params) => (
+            <InputBase
+              {...params.InputProps}
+              inputProps={{
+                ...params.inputProps,
+                style: {
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: '12px',
+                  padding: 0,
+                }
+              }}
+              sx={{
+                width: '160px',
+                height: 40,
+                backgroundColor: '#E0E0E0',
+                borderRadius: '13px',
+                px: 2,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+              endAdornment={params.InputProps?.endAdornment}
+            />
+          ),
         }}
       />
     </LocalizationProvider>
