@@ -5,8 +5,9 @@ import {
   Avatar, IconButton
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { ko } from 'date-fns/locale';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
+import 'dayjs/locale/ko';
 import { CmUtil } from '../../cm/CmUtil';
 import { useCmDialog } from '../../cm/CmDialogUtil';  
 const Pet_Form_Update = () => {
@@ -84,7 +85,7 @@ const Pet_Form_Update = () => {
       <FormRow label="종류" value={species} onChange={setSpecies} inputRef={speciesRef} />
       
 
-      <DateInputRow label="입양일" value={adoptionDate} onChange={setAdoptionDate} />
+      <DateInputRow label="동물 입양일" value={adoptionDate} onChange={setAdoptionDate} />
       <DateInputRow label="생일" value={birthDate} onChange={setBirthDate} />
 
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -213,44 +214,49 @@ const FormRow = ({ label, value = '', onChange, multiline = false, inputRef, fie
   );
 };
 
-const DateInputRow = ({ label, value, onChange }) => (
-  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-    <Typography sx={{ width: '90px', fontSize: 14, fontWeight: 500 }}>{label}</Typography>
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ko}>
-      <DatePicker
-        value={value}
-        onChange={onChange}
-        inputFormat="yyyy.MM.dd"
-        enableAccessibleFieldDOMStructure={false} // <-- 이 부분 추가
-        slots={{
-          textField: (params) => (
-            <InputBase
-              {...params.InputProps}
-              inputProps={{
-                ...params.inputProps,
+const DateInputRow = ({ label, value, onChange }) => {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+      <Typography sx={{ width: '90px', fontSize: 14, fontWeight: 500 }}>
+        {label}
+      </Typography>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+        <DatePicker
+          value={value}
+          onChange={onChange}
+          format="YYYY.MM.DD"
+          slotProps={{
+            textField: {
+              variant: 'outlined',
+              size: 'small',
+              fullWidth: false,
+              InputProps: {
+                readOnly: true,
+                sx: {
+                  width: 160,
+                  height: 40,
+                  backgroundColor: '#D9D9D9',
+                  borderRadius: '13px',
+                  fontSize: '13px',
+                  fontWeight: 'normal', // ✅ 진하지 않게
+                  pr: '12px', // 아이콘 공간 확보
+                  pl: '33px', // 좌측 패딩 확보 날짜 텍스트 정중앙에 오게하기.
+                  '& input': {
+                    textAlign: 'center', // ✅ 날짜 가운데 정렬
+                    padding: 0,          // ✅ 모든 방향 패딩 제거
+                  },
+                },
+              },
+              inputProps: {
                 style: {
                   textAlign: 'center',
-                  fontWeight: 'bold',
-                  fontSize: '12px',
-                  padding: 0,
-                }
-              }}
-              sx={{
-                width: '160px',
-                height: 40,
-                backgroundColor: '#E0E0E0',
-                borderRadius: '13px',
-                px: 2,
-                display: 'flex',
-                alignItems: 'center',
-              }}
-              endAdornment={params.InputProps?.endAdornment}
-            />
-          ),
-        }}
-      />
-    </LocalizationProvider>
-  </Box>
-);
-
+                },
+              },
+            },
+          }}
+        />
+      </LocalizationProvider>
+    </Box>
+  );
+};
 export default Pet_Form_Update;
