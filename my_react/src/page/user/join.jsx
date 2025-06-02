@@ -6,22 +6,22 @@ import { useCmDialog } from '../../cm/CmDialogUtil';
 import { CmUtil } from '../../cm/CmUtil';
 import { useEffect } from 'react';
 const Register = () => {
-  const [userId, setUserId] = useState('');
-  const [password, setPassword] = useState('');
-  const [password_confirm, setPassword_confirm] = useState('');
-  const [email, setEmail] = useState('');
-  const [nickname, setNickName] = useState('');
-  const userIdRef = useRef();
-  const passwordRef = useRef();
-  const password_confirmRef = useRef();
-  const emailRef = useRef();
-  const nicknameRef =useRef();
+  const [usersId, setUsersId] = useState('');
+  const [users_password, setUsers_Password] = useState('');
+  const [users_password_confirm, setUsers_Password_confirm] = useState('');
+  const [users_email, setUsers_Email] = useState('');
+  const [users_name, setUsers_Name] = useState('');
+  const usersIdRef = useRef();
+  const users_passwordRef = useRef();
+  const users_password_confirmRef = useRef();
+  const users_emailRef = useRef();
+  const users_nameRef =useRef();
   const [emailCode, setEmailCode] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [timer, setTimer] = useState(180); // 3분
   const timerRef = useRef();
-
+  const [isUserIdAvailable, setIsUserIdAvailable] = useState(false);
   
   useEffect(() => {
     return () => clearInterval(timerRef.current);
@@ -38,47 +38,57 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleRegisterClick = async () => {
-    if (CmUtil.isEmpty(nickname)) {
+    if (CmUtil.isEmpty(users_name)) {
       showAlert('닉네임 입력해주세요.');
-      nicknameRef.current?.focus();
+      users_nameRef.current?.focus();
       return;
     }
 
-    if (CmUtil.isEmpty(userId)) {
+    if (CmUtil.isEmpty(usersId)) {
       showAlert('아이디를 입력해주세요.');
-      userIdRef.current?.focus();
+      usersIdRef.current?.focus();
       return;
     }
 
-    if (CmUtil.isEmpty(password)) {
+    if (CmUtil.isEmpty(users_password)) {
       showAlert('비밀번호를 입력해주세요.');
-      passwordRef.current?.focus();
+      users_passwordRef.current?.focus();
       return;
     }
-    if (CmUtil.isEmpty(password_confirm)) {
+    if (CmUtil.isEmpty(users_password_confirm)) {
       showAlert('비밀번호를 다시 입력해주세요.');
-      password_confirmRef.current?.focus();
+      users_password_confirmRef.current?.focus();
       return;
     }
 
     
-    if (CmUtil.isEmpty(email)) {
+    if (CmUtil.isEmpty(users_email)) {
       showAlert('이메일을 입력해주세요.');
-      emailRef.current?.focus();
+      users_emailRef.current?.focus();
       return;
     }
 
-    if (!CmUtil.isEmail(email)) {
+    if (!CmUtil.isEmail(users_email)) {
       showAlert('유효한 이메일 형식이 아닙니다.');
-      emailRef.current?.focus();
+      users_emailRef.current?.focus();
       return;
     }
-
-   
-    
+    if (!isUserIdAvailable) {
+      showAlert('아이디 중복 확인을 해주세요.');
+      return;
+    }
+    if (users_password !== users_password_confirm) {
+      showAlert('비밀번호가 일치하지 않습니다.');
+      users_password_confirmRef.current?.focus();
+      return;
+    }
+    if (!isEmailVerified) {
+      showAlert('이메일 인증을 완료해주세요.');
+      return;
+    }
    
     try {
-      const response = await register({ nickname, userId, password, email}).unwrap();
+      const response = await register({ users_name, usersId, users_password, users_email}).unwrap();
       if (response.success) {
         showAlert("회원가입에 성공 하셨습니다. 로그인화면으로 이동합니다.", () => { navigate('/user/login.do'); });
       } else {
@@ -88,14 +98,40 @@ const Register = () => {
       showAlert('회원가입에 실패했습니다. 다시 시도해주세요.');
     }
   };
+  const handleCheckUserId = async () => {
+    if (CmUtil.isEmpty(usersId)) {
+      showAlert('아이디를 입력해주세요.');
+      usersIdRef.current?.focus();
+      return;
+    }
 
+    try {
+      const BACKEND_URL = 'http://localhost:8081'; // 서버 주소
+      const res = await fetch(`${BACKEND_URL}/api/user/checkUserId.do`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usersId })
+      });
+      const data = await res.json();
+      
+      if (data.available) {
+        setIsUserIdAvailable(true);
+        showAlert('사용 가능한 아이디입니다.');
+      } else {
+        setIsUserIdAvailable(false);
+        showAlert('이미 사용 중인 아이디입니다.');
+      }
+    } catch (e) {
+      showAlert('서버 오류가 발생했습니다.');
+    }
+  };
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleRegisterClick();
     }
   };
   const handleSendEmailCode = async () => {
-    if (!CmUtil.isEmail(email)) {
+    if (!CmUtil.isEmail(users_email)) {
       showAlert('유효한 이메일 형식이 아닙니다.');
       return;
     }
@@ -105,19 +141,18 @@ const Register = () => {
       const res = await fetch(`${BACKEND_URL}/api/email/send-code.do`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ users_email, usersId })
       });
       const data = await res.json();
 
       if (data.success) {
-        // 기존 타이머 제거 및 초기화
+        // 인증 성공 시 타이머 초기화 및 설정
         clearInterval(timerRef.current);
         setTimer(180);
         setEmailSent(true);
         setIsEmailVerified(false);
         setEmailCode('');
-
-        // 타이머 새로 시작
+        console.log(data);
         timerRef.current = setInterval(() => {
           setTimer((prev) => {
             if (prev <= 1) {
@@ -130,7 +165,10 @@ const Register = () => {
           });
         }, 1000);
 
-        showAlert('인증번호가 이메일로 전송되었습니다.');
+        showAlert('이메일로 인증번호가 전송되었습니다.');
+      } else if (data.code === 'DUPLICATE_EMAIL') {
+        // 서버에서 중복 이메일 응답 시
+        showAlert('해당 이메일은 이미 가입되어 있습니다.');
       } else {
         showAlert('인증번호 전송에 실패했습니다.');
       }
@@ -145,7 +183,7 @@ const Register = () => {
       const res = await fetch(`${BACKEND_URL}/api/email/verify-code.do`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code: emailCode })
+        body: JSON.stringify({ users_email, code: emailCode })
       });
       const data = await res.json();
       if (data.success) {
@@ -177,30 +215,37 @@ const Register = () => {
         label="닉네임*"
         fullWidth
         margin="normal"
-        value={nickname}
-        inputRef={nicknameRef}
-        onChange={(e) => setNickName(e.target.value)}
+        value={users_name}
+        inputRef={users_nameRef}
+        onChange={(e) => setUsers_Name(e.target.value)}
         onKeyPress={handleKeyPress}
       />
 
-      <TextField
-        label="아이디*"
-        fullWidth
-        margin="normal"
-        value={userId}
-        inputRef={userIdRef}
-        onChange={(e) => setUserId(e.target.value)}
-        onKeyPress={handleKeyPress}
-      />
+      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 1 }}>
+        <TextField
+          label="아이디*"
+          fullWidth
+          value={usersId}
+          inputRef={usersIdRef}
+          onChange={(e) => {
+            setUsersId(e.target.value);
+            setIsUserIdAvailable(false); // 아이디 변경 시 상태 초기화
+          }}
+          onKeyPress={handleKeyPress}
+        />
+        <Button variant="outlined" onClick={handleCheckUserId}>
+          중복확인
+        </Button>
+      </Box>
 
       <TextField
         label="비밀번호*"
         type="password"
         fullWidth
         margin="normal"
-        value={password}
-        inputRef={passwordRef}
-        onChange={(e) => setPassword(e.target.value)}
+        value={users_password}
+        inputRef={users_passwordRef}
+        onChange={(e) => setUsers_Password(e.target.value)}
         onKeyPress={handleKeyPress}
       />
       <TextField
@@ -208,9 +253,9 @@ const Register = () => {
         type="password"
         fullWidth
         margin="normal"
-        value={password_confirm}
-        inputRef={password_confirmRef}
-        onChange={(e) => setPassword_confirm(e.target.value)}
+        value={users_password_confirm}
+        inputRef={users_password_confirmRef}
+        onChange={(e) => setUsers_Password_confirm(e.target.value)}
         onKeyPress={handleKeyPress}
       />
 
@@ -219,11 +264,11 @@ const Register = () => {
         type="email"
         fullWidth
         margin="normal"
-        value={email}
-        inputRef={emailRef}
-        // 이메일 변경 시 인증 초기화
+        value={users_email}
+        inputRef={users_emailRef}
+        inputProps={{ maxLength: 200 }} // <- 여기 추가
         onChange={(e) => {
-          setEmail(e.target.value);
+          setUsers_Email(e.target.value);
           setIsEmailVerified(false);
           setEmailSent(false);
           setEmailCode('');
