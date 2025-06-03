@@ -81,8 +81,8 @@ const Pet_Form_Update = () => {
         </IconButton>
       </Box>
 
-      <FormRow label="이름" value={name} onChange={setName} inputRef={nameRef} />
-      <FormRow label="종류" value={species} onChange={setSpecies} inputRef={speciesRef} />
+      <FormRow label="동물 이름" value={name} onChange={setName} inputRef={nameRef} />
+      <FormRow label="동물 종류" value={species} onChange={setSpecies} inputRef={speciesRef} />
       
 
       <DateInputRow label="동물 입양일" value={adoptionDate} onChange={setAdoptionDate} />

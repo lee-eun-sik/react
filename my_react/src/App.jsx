@@ -24,7 +24,9 @@ import CalenderView from './page/calendar/CalendarView';
 import FilterBar from './page/calendar/FilterBar';
 import PetForm from './page/pet/Pet_Form';
 import PetFormUpdate from './page/pet/Pet_Form_Update';
-
+import PetFormHospital from './page/pet/Pet_Form_Hospital';
+import Combo from './page/combo/combo';
+import CommonComboBox from './page/combo/CommonComboBox';
 const App = () => {
   const navigate = useNavigate();
 
@@ -34,7 +36,6 @@ const App = () => {
 
   return (
       <Routes>
-
         <Route path="/" element={<LayoutLogin><Home /></LayoutLogin>} />
         <Route path="/user/login.do" element={<LayoutNoLogin><Login /></LayoutNoLogin>} />
         <Route path="/user/join.do" element={<LayoutNoLogin><Join /></LayoutNoLogin>} />
@@ -53,6 +54,9 @@ const App = () => {
         <Route path="/calendar/FilterBar.do" element={<LayoutNoLogin><FilterBar></FilterBar></LayoutNoLogin>} />      
         <Route path="/pet/petForm.do" element={<LayoutNoLogin><PetForm></PetForm></LayoutNoLogin>} />
         <Route path="/pet/petFormUpdate.do" element={<LayoutNoLogin><PetFormUpdate></PetFormUpdate></LayoutNoLogin>} />
+        <Route path="/pet/petFormHospital.do" element={<LayoutNoLogin><PetFormHospital></PetFormHospital></LayoutNoLogin>} />
+        <Route path="/combo/combo.do" element={<LayoutNoLogin><Combo></Combo></LayoutNoLogin>} />
+        <Route path="/combo/commonComboBox.do" element={<LayoutNoLogin><CommonComboBox></CommonComboBox></LayoutNoLogin>} />
       </Routes>
       
   );

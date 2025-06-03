@@ -12,6 +12,7 @@ import { reservationApi } from "../features/reservation/reservationApi";
 import { memberApi } from "../features/member/memberApi";
 import { chatApi } from "../features/chat/chatApi";
 import { petApi } from "../features/pet/petApi";
+import { comboApi } from "../features/combo/comboApi";
 const persistConfig = {
     key: 'root',
     storage: storageSession, // sessionStorage로 변경
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
     [reservationApi.reducerPath]: reservationApi.reducer,
     [memberApi.reducerPath]: memberApi.reducer,
     [findApi.reducerPath]: findApi.reducer,
-    [petApi.reducerPath]: petApi.reducer
+    [petApi.reducerPath]: petApi.reducer,
+    [comboApi.reducerPath]: comboApi.reducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -37,7 +39,7 @@ export const store = configureStore({
         getDefaultMiddleware({
             serializableCheck: false
         }).concat(userApi.middleware, boardApi.middleware, fileApi.middleware, reservationApi.middleware, memberApi.middleware
-            , findApi.middleware, chatApi.middleware, petApi.middleware 
+            , findApi.middleware, chatApi.middleware, petApi.middleware, comboApi.middleware 
         )// 넣어주고 관리하기
 });
 

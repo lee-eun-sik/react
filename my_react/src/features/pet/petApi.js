@@ -18,12 +18,20 @@ export const petApi = createApi({
         url: '/api/pet/petUpdate.do',
         method: 'POST',
         body: formData, 
-      })
-    })
+      }),
+    }),
+    Pet_Form_Hospital: builder.mutation({
+      query: (formData) => ({
+        url: '/api/pet/petHospital.do',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
   }),
 });
 
 export const {
   usePet_FormMutation,
-  usePet_Form_UpdateMutation
+  usePet_Form_UpdateMutation,
+  usePet_Form_HospitalMutation
 } = petApi;
