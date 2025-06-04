@@ -33,7 +33,7 @@ const FormRow = ({ label, value = '', onChange, multiline = false, inputRef, fie
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
-      <Typography sx={{ width: '90px', fontSize: 14, fontWeight: 500, mt: multiline ? '6px' : 0, position: 'relative', left:50 }}>
+      <Typography sx={{ width: '90px', fontSize: 14, fontWeight: 500, mt: multiline ? '6px' : 0, position: 'relative', left:20 }}>
         {label}
       </Typography>
       <InputBase
@@ -46,13 +46,13 @@ const FormRow = ({ label, value = '', onChange, multiline = false, inputRef, fie
           style: {
             padding: 0,
             textAlign: 'center',
-            fontSize: '13px',
+            fontSize: '10px',
             ...(multiline ? { paddingTop: 4 } : {}),
           }
         }}
         sx={{
-          left: '38px',  
-          width: '101px',
+          left: '4px',  
+          width: '87px',
           height: '20px',
           backgroundColor,
           border,
@@ -86,7 +86,7 @@ const FormRow1 = ({ label, value = '', onChange, multiline = false, inputRef, fi
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
-      <Typography sx={{ width: '90px', fontSize: 14, fontWeight: 500, mt: multiline ? '6px' : 0, position: 'relative', left:38 }}>
+      <Typography sx={{ width: '90px', fontSize: 14, fontWeight: 500, mt: multiline ? '6px' : 0, position: 'relative', left:20, top: 5 }}>
         {label}
       </Typography>
       <InputBase
@@ -99,17 +99,17 @@ const FormRow1 = ({ label, value = '', onChange, multiline = false, inputRef, fi
           style: {
             padding: 0,
             textAlign: 'center',
-            fontSize: '13px',
+            fontSize: '14px',
             ...(multiline ? { paddingTop: 4 } : {}),
           }
         }}
         sx={{
-          left: '32px',  
-          width: '101px',
-          height: '20px',
+          left: '100px',  
+          width: '142px',
+          height: '30px',
           backgroundColor,
           border,
-          borderRadius,
+          borderRadius: '11px',
           px: 1,
           py: 1,
           fontWeight,
@@ -130,10 +130,10 @@ const DateInputRowCustom = ({ label, value, onChange }) => {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-      <Typography sx={{ width: '80px', fontSize: '13px', fontWeight: '500', mt: -1 , position: 'relative', left: 50}}> 
+      <Typography sx={{ width: '80px', fontSize: '13px', fontWeight: '500', mt: -1 , position: 'relative', left: 21}}> 
         {label}
       </Typography>
-      <Box sx={{ position: 'relative', width: '100px', height: '18px', left: '47px',top:-6 }}>
+      <Box sx={{ position: 'relative', width: '85px', height: '18px', left: '13px',top:-6 }}>
         {/* 실제 date input */}
         <input
           type="date"
@@ -172,10 +172,10 @@ const DateInputRowCustom = ({ label, value, onChange }) => {
 };
 const DateInputRow = ({ label, value, onChange }) => {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, position: 'relative', left: 1 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
       <Typography
         sx={{
-          width: 100, // 넉넉한 고정 너비
+          width: 66, // 넉넉한 고정 너비
           fontSize: 14,
           fontWeight: 500,
           textAlign: 'center',
@@ -198,11 +198,12 @@ const DateInputRow = ({ label, value, onChange }) => {
               InputProps: {
                 readOnly: true,
                 sx: {
-                  width: 160,
+                  left: 133,
+                  width: 141,
                   height: 30,
                   backgroundColor: '#D9D9D9',
                   borderRadius: '10px',
-                  fontSize: '13px',
+                  fontSize: '12px',
                   fontWeight: 'normal',
                   pr: '12px',
                   pl: '12px',
@@ -331,14 +332,16 @@ const Pet_Form_Hospital = () => {
       onSubmit={handleSubmit}
       sx={{
         width: '100%',
-        maxWidth: 420,
+        maxWidth: 360, // Android 화면 폭
+        height: 640,   // Android 화면 높이
         margin: '0 auto',
-        padding: 2,
-        backgroundColor: '#fff',
+        overflowY: 'auto', // 스크롤 가능하게
         borderRadius: '12px',
+        backgroundColor: '#fff',
         display: 'flex',
         gap: 2,
         alignItems: 'flex-start',
+        padding: 2,
       }}
     >
       {/* 왼쪽 입력 */}
@@ -351,10 +354,10 @@ const Pet_Form_Hospital = () => {
             type="submit"
             sx={{
               bottom: 10,
-              left: 44,
+              left: 12,
               backgroundColor: '#88AE97',
               borderRadius: '30px',
-              width: 180,
+              width: 160,
               height: 20,
               px: 6,
               py: 1.5,
@@ -368,15 +371,15 @@ const Pet_Form_Hospital = () => {
       </Box>
 
       {/* 오른쪽 이미지 */}
-      <Box sx={{ position: 'relative', left: '54px' }}>
+      <Box sx={{ position: 'relative', left: '18px', top: 10 }}>
         <Box
           sx={{
-            width: 110,
-            height: 85,
+            width: 90,
+            height: 70,
             borderRadius: '50%',
             overflow: 'hidden',
             border: '3px solid white',
-            backgroundColor: '#f3d9dc',
+            backgroundColor: '#A5B1AA',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -396,9 +399,9 @@ const Pet_Form_Hospital = () => {
           size="small"
           sx={{
             position: 'relative',
-            top: -120,
-            right: -100,
-            backgroundColor: '#A5B1AA',
+            top: -98,
+            right: -80,
+            backgroundColor: '#889F7F',
             color: '#fff',
             fontSize: '12px',
             fontWeight: 'normal',
@@ -425,20 +428,19 @@ const Pet_Form_Hospital = () => {
 
     {/* ✅ 탭은 폼 바깥에 위치 */}
     {/* 폼 컴포넌트 아래 탭 - 간격 좁히기 */}
-    <Box sx={{ width: '100%', maxWidth: 400, mx: 'auto', mt: -5 }}>
+    <Box sx={{ width: '100%', maxWidth: 400, mx: 'auto', mt: -70 }}>
         <Tabs
             value={selectedTab}
             onChange={handleTabChange}
             variant="fullWidth"
             sx={{
-            height: '36px',
+            width: 360,
             minHeight: '36px',
             '& .MuiTab-root': {
                 fontSize: '13px',
                 color: '#777',
                 fontWeight: 500,
                 minHeight: '36px',
-                height: '36px',
                 borderBottom: '2px solid transparent',
             },
             '& .Mui-selected': {
@@ -455,13 +457,25 @@ const Pet_Form_Hospital = () => {
             <Tab label="훈련/행동" />
         </Tabs>
     </Box>
-    <Box sx={{ width: '100%', maxWidth: 400, mx: 'auto', mt: 5 }}>
+    <Box sx={{ width: '100%', maxWidth: 400, mx: 'auto', mt: 2 }}>
       <DateInputRow label="날짜" value={animalVisitDate} onChange={setAnimalVisitDate} />
       <FormRow1 label="병원 이름" value={animalHospitalName} onChange={setAnimalHospitalName} inputRef={animalHospitalNameRef} />
       <FormRow1 label="처방약" value={animalMedication} onChange={setAnimalMedication} inputRef={animalMedicationRef} />
-      <Typography>진료 내용<Combo></Combo></Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 13 }}>
+        <Typography
+          sx={{
+            width: 92,
+            fontSize: 14,
+            fontWeight: 500,
+            textAlign: 'center',
+            height: 30,
+          }}
+        >
+          진료 내용
+        </Typography>
+        <Combo />
+      </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
-          <Typography sx={{ fontSize: 14, fontWeight: 500, mb: 1 }}>특이사항</Typography>
           <InputBase
             value={animalTreatmentMemo}
             onChange={(e) => setAnimalTreatmentMemo(e.target.value)}
@@ -479,6 +493,8 @@ const Pet_Form_Hospital = () => {
               borderRadius: '12px',
               px: 2,
               py: 1,
+              left: 18,
+              width : 314,
               minHeight: 70,
               textDecoration: 'none',
               fontWeight: 'normal',
@@ -493,6 +509,7 @@ const Pet_Form_Hospital = () => {
             onClick={handleSave}
             variant="contained"
             sx={{
+              left: -23,
               backgroundColor: '#556B2F',
               borderRadius: '20px',
               px: 4,
@@ -575,4 +592,4 @@ const Pet_Form_Hospital = () => {
   </Box>
 );
 };
-export default Pet_Form_Hospital;  
+export default Pet_Form_Hospital; 
