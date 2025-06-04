@@ -134,9 +134,6 @@ const Combo = () => {
         삭제
       </Button>   */}
       
-      <Typography variant="body1" sx={{ mt: 2 }}>
-        선택된 값: {selected || '없음'}
-      </Typography>
     </Box>
   );
 };
