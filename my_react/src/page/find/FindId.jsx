@@ -7,7 +7,7 @@ import { CmUtil } from '../../cm/CmUtil';
 import { useEffect } from 'react';
 const FindId = () => {
   
-  const [email, setEmail] = useState('');
+  const [usersEmail, setUsersEmail] = useState('');
   const emailRef = useRef();
 
   const [emailCode, setEmailCode] = useState('');
@@ -41,7 +41,7 @@ const FindId = () => {
     }
 
 
-    if (CmUtil.isEmpty(email) || !CmUtil.isEmail(email)) {
+    if (CmUtil.isEmpty(usersEmail) || !CmUtil.isEmail(usersEmail)) {
       showAlert('유효한 이메일 형식을 입력해주세요.');
       emailRef.current?.focus();
       return;
@@ -53,7 +53,7 @@ const FindId = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email
+          usersEmail
         })
       });
 
@@ -71,7 +71,7 @@ const FindId = () => {
   };
 
   const handleSendEmailCode = async () => {
-    if (!CmUtil.isEmail(email)) {
+    if (!CmUtil.isEmail(usersEmail)) {
       showAlert('유효한 이메일 형식이 아닙니다.');
       return;
     }
@@ -81,7 +81,7 @@ const FindId = () => {
       const res = await fetch(`${BACKEND_URL}/api/email/send-code.do`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ usersEmail })
       });
       const data = await res.json();
 
@@ -120,7 +120,7 @@ const FindId = () => {
       const res = await fetch(`${BACKEND_URL}/api/email/verify-code.do`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code: emailCode })
+        body: JSON.stringify({ usersEmail, code: emailCode })
       });
       const data = await res.json();
 
@@ -142,9 +142,9 @@ const FindId = () => {
       {!showResult && (
         <>
           
-          <TextField label="이메일" type="email" fullWidth margin="normal" value={email} inputRef={emailRef}
+          <TextField label="이메일" type="email" fullWidth margin="normal" value={usersEmail} inputRef={emailRef}
             onChange={(e) => {
-              setEmail(e.target.value);
+              setUsersEmail(e.target.value);
               setIsEmailVerified(false);
               setEmailSent(false);
               setEmailCode('');
@@ -180,7 +180,7 @@ const FindId = () => {
           </Typography>
           <Box sx={{ mt: 2 }}>
             <Typography variant="body1" sx={{ color: 'black', fontWeight: 'bold' }}>
-              아이디 : {foundId.userId}
+              아이디 : {foundId.usersId}
             </Typography>
             <Typography variant="body1" sx={{ color: 'black', fontWeight: 'bold', mt: 1 }}>
               가입일자 : {foundId.createDt}

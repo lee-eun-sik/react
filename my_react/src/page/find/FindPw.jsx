@@ -7,11 +7,11 @@ import { CmUtil } from '../../cm/CmUtil';
 import { useEffect } from 'react';
 
 const FindPw = () => {
-  const [userId, setUserId] = useState('');
-  const userIdRef = useRef();
+  const [usersId, setUsersId] = useState('');
+  const usersIdRef = useRef();
 
-  const [email, setEmail] = useState('');
-  const emailRef = useRef();
+  const [usersEmail, setUsersEmail] = useState('');
+  const usersEmailRef = useRef();
 
   const [emailCode, setEmailCode] = useState('');
   const [emailSent, setEmailSent] = useState(false);
@@ -37,15 +37,15 @@ const FindPw = () => {
     return `${min}:${sec}`;
   };
   const handleFindPwClick = async () => {
-    if (CmUtil.isEmpty(userId)) {
+    if (CmUtil.isEmpty(usersId)) {
         showAlert("ID를 입력해주세요.");
-        userIdRef.current?.focus();
+        usersIdRef.current?.focus();
         return;
     }
 
-    if (CmUtil.isEmpty(email) || !CmUtil.isEmail(email)) {
+    if (CmUtil.isEmpty(usersEmail) || !CmUtil.isEmail(usersEmail)) {
         showAlert('유효한 이메일 형식을 입력해주세요.');
-        emailRef.current?.focus();
+        usersEmailRef.current?.focus();
         return;
     }
 
@@ -54,13 +54,13 @@ const FindPw = () => {
       const res = await fetch(`${BACKEND_URL}/api/find/findPw.do`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, email })
+        body: JSON.stringify({ usersId, usersEmail })
       });
       const data = await res.json();
 
       if (data.success) {
         showAlert("계정 확인 완료. 비밀번호를 재설정해주세요.");
-        navigate('/find/resetPassword.do', { state: { userId } }); // ✅ 페이지 이동 + userId 전달
+        navigate('/find/resetPassword.do', { state: { usersId } }); // ✅ 페이지 이동 + userId 전달
       } else {
         showAlert(data.message || "입력한 정보가 일치하지 않습니다.");
       }
@@ -74,7 +74,7 @@ const FindPw = () => {
       }
   };
   const handleSendEmailCode = async () => {
-    if (!CmUtil.isEmail(email)) {
+    if (!CmUtil.isEmail(usersEmail)) {
       showAlert('유효한 이메일 형식이 아닙니다.');
       return;
     }
@@ -84,7 +84,7 @@ const FindPw = () => {
       const res = await fetch(`${BACKEND_URL}/api/email/send-code.do`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ usersEmail })
       });
       const data = await res.json();
 
@@ -124,7 +124,7 @@ const FindPw = () => {
         const res = await fetch(`${BACKEND_URL}/api/email/verify-code.do`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, code: emailCode })
+          body: JSON.stringify({ usersEmail, code: emailCode })
         });
         const data = await res.json();
         if (data.success) {
@@ -170,9 +170,9 @@ const FindPw = () => {
             label="아이디"
             fullWidth
             margin="normal"
-            value={userId}
-            inputRef={userIdRef}
-            onChange={(e) => setUserId(e.target.value)}
+            value={usersId}
+            inputRef={usersIdRef}
+            onChange={(e) => setUsersId(e.target.value)}
             onKeyPress={handleKeyPress}
           />
 
@@ -181,10 +181,10 @@ const FindPw = () => {
             type="email"
             fullWidth
             margin="normal"
-            value={email}
-            inputRef={emailRef}
+            value={usersEmail}
+            inputRef={usersEmailRef}
             onChange={(e) => {
-              setEmail(e.target.value);
+              setUsersEmail(e.target.value);
               setIsEmailVerified(false);
               setEmailSent(false);
               setEmailCode('');

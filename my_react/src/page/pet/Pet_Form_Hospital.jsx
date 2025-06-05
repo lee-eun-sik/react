@@ -1,9 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Box, Typography, InputBase, Button, IconButton
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete'
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -12,8 +10,7 @@ import { CmUtil } from '../../cm/CmUtil';
 import { useCmDialog } from '../../cm/CmDialogUtil';
 import { Tabs, Tab } from '@mui/material';
 import Combo from '../../page/combo/combo';
-
-const MAX_VISIBLE_RECORDS = 5;
+import { useLocation } from 'react-router-dom';
 
 const FormRow = ({ label, value = '', onChange, multiline = false, inputRef, fieldKey = '' }) => {
   let backgroundColor = '#E0E0E0';
@@ -46,7 +43,7 @@ const FormRow = ({ label, value = '', onChange, multiline = false, inputRef, fie
           style: {
             padding: 0,
             textAlign: 'center',
-            fontSize: '10px',
+            fontSize: '8px',
             ...(multiline ? { paddingTop: 4 } : {}),
           }
         }}
@@ -122,55 +119,7 @@ const FormRow1 = ({ label, value = '', onChange, multiline = false, inputRef, fi
     </Box>
   );
 };
-const DateInputRowCustom = ({ label, value, onChange }) => {
-  const formatDate = (dateStr) => {
-    if (!dateStr) return '';
-    const [year, month, day] = dateStr.split('-');
-    return `${year}.${month}.${day}`;
-  };
 
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-      <Typography sx={{ width: '80px', fontSize: '13px', fontWeight: '500', mt: -1 , position: 'relative', left: 31, top: 7}}> 
-        {label}
-      </Typography>
-      <Box sx={{ position: 'relative', width: '69px', height: '18px', left: '30px',top:1 }}>
-        {/* 실제 date input */}
-        <input
-          type="date"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            opacity: 0,
-            cursor: 'pointer',
-          }}
-        />
-        {/* 보이는 커스텀 레이어 */}
-        <Box
-          sx={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: '#E0E0E0',
-            borderRadius: '20px',
-            border: '1px solid #ccc',
-            fontSize: '12px',
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'center',
-            pointerEvents: 'none', // input이 클릭되도록
-          }}
-        >
-          {formatDate(value)}
-        </Box>
-      </Box>
-    </Box>
-  );
-};
 const DateInputRow = ({ label, value, onChange }) => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -231,24 +180,27 @@ const DateInputRow = ({ label, value, onChange }) => {
 const Pet_Form_Hospital = () => {
   const [animalName, setAnimalName] = useState('');
   const animalNameRef = useRef();
-
-  const [animalAdoptionDate, setAnimalAdoptionDate] = useState(null);
+  const location = useLocation();
+  const [animalAdoptionDate, setAnimalAdoptionDate] = useState('');
   const [animalVisitDate, setAnimalVisitDate] = useState(dayjs());
   const [imageFile, setImageFile] = useState(null);
   const [animalTreatmentMemo, setAnimalTreatmentMemo] = useState('');
   const animalTreatmentMemoRef = useRef();
   const [animalHospitalName, setAnimalHospitalName] = useState('');
   const animalHospitalNameRef = useRef();
-
-  const [records, setRecords] = useState([]);
-  const [showAll, setShowAll] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editId, setEditId] = useState(null);
-
+  const [animalTreatmentType, setAnimalTreatmentType] = useState('');
+  
   const [animalMedication, setAnimalMedication] = useState('');
   const animalMedicationRef = useRef();
   const { showAlert } = useCmDialog();
   const [selectedTab, setSelectedTab] = useState(0);
+  
+  useEffect(() => {
+    // 수정 페이지에서 전달된 날짜 적용
+    if (location.state?.updatedDate) {
+      setAnimalAdoptionDate(location.state.updatedDate);
+    }
+  }, [location.state]);
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -276,55 +228,14 @@ const Pet_Form_Hospital = () => {
       animalMedicationRef.current?.focus();
       return;
     }
+
+    const formData = new FormData();
+    formData.append('animalTreatment/Type', animalTreatmentType);
     // TODO: submit logic
-    handleSave();
+    
   };
-   const handleDelete = (id) => {
-    setRecords(prev => prev.filter(rec => rec.id !== id));
-  };
-
-  const handleEdit = (record) => {
-    setAnimalName(record.animalName);
-    setAnimalVisitDate(dayjs(record.animalVisitDate));
-    setAnimalHospitalName(record.animalHospitalName);
-    setAnimalMedication(record.animalMedication);
-    setAnimalTreatmentMemo(record.animalTreatmentMemo);
-    setImageFile(null); // 실제 이미지 편집은 따로 처리해야 함
-    setIsEditing(true);
-    setEditId(record.id);
-  };
-  // 새 기록 추가
-    // 새 기록 추가 또는 수정 저장
-  const handleSave = () => {
-    const newRecord = {
-      id: isEditing ? editId : Date.now(),
-      animalName,
-      animalVisitDate: animalVisitDate?.format('YYYY.MM.DD'),
-      animalHospitalName,
-      animalMedication,
-      animalTreatmentMemo,
-      imageUrl: imageFile ? URL.createObjectURL(imageFile) : '/default-dog.jpg',
-    };
-
-    if (isEditing) {
-      setRecords(prev =>
-        prev.map(rec => (rec.id === editId ? newRecord : rec))
-      );
-      setIsEditing(false);
-      setEditId(null);
-    } else {
-      setRecords(prev => [newRecord, ...prev]);
-    }
-
-    // 입력값 초기화
-    setAnimalName('');
-    setAnimalHospitalName('');
-    setAnimalMedication('');
-    setAnimalTreatmentMemo('');
-    setAnimalVisitDate(dayjs());
-    setImageFile(null);
-  };  
-  const visibleRecords = showAll ? records : records.slice(0, MAX_VISIBLE_RECORDS);
+   
+  
 
   return (
   <Box>
@@ -349,7 +260,7 @@ const Pet_Form_Hospital = () => {
       {/* 왼쪽 입력 */}
       <Box>
         <FormRow label="동물 이름" value={animalName} onChange={setAnimalName} inputRef={animalNameRef} />
-        <DateInputRowCustom label="날짜" value={animalAdoptionDate} onChange={setAnimalAdoptionDate} />
+        <FormRow label="날짜" value={animalAdoptionDate} onChange={setAnimalAdoptionDate} />
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <Button
             variant="contained"
@@ -363,7 +274,7 @@ const Pet_Form_Hospital = () => {
               height: 20,
               px: 6,
               py: 1.5,
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: 'bold',
             }}
           >
@@ -475,7 +386,7 @@ const Pet_Form_Hospital = () => {
         >
           진료 내용
         </Typography>
-        <Combo />
+        <Combo groupId="Medical"/>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
           <InputBase
@@ -508,7 +419,7 @@ const Pet_Form_Hospital = () => {
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
           <Button
-            onClick={handleSave}
+            onClick={handleSubmit}
             variant="contained"
             sx={{
               left: -3,
@@ -523,74 +434,7 @@ const Pet_Form_Hospital = () => {
           </Button>
         </Box>
     </Box>
-      {/* ▼ 기록 리스트 표시 부분 */}
-    <Box sx={{ maxWidth: 500, mx: 'auto', mt: 4 }}>
-      <Typography sx={{ fontWeight: 600, mb: 2, fontSize: 16 }}>진료 기록 목록</Typography>
-
-      {records.length === 0 ? (
-        <Typography sx={{ fontSize: 14, color: '#999' }}>등록된 기록이 없습니다.</Typography>
-      ) : (
-        <>
-          <Box sx={{ maxHeight: 300, overflowY: 'auto' }}>
-            {visibleRecords.map((record) => (
-              <Box
-                key={record.id}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: 2,
-                  p: 2,
-                  mb: 2,
-                  border: '1px solid #ccc',
-                  borderRadius: '12px',
-                  backgroundColor: '#F7F7F7',
-                }}
-              >
-                <img
-                  src={record.imageUrl}
-                  alt="animal"
-                  style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: '12px',
-                    objectFit: 'cover',
-                  }}
-                />
-                <Box sx={{ flex: 1 }}>
-                  <Typography sx={{ fontWeight: 500, fontSize: 14 }}>
-                    {record.animalName} ({record.animalVisitDate})
-                  </Typography>
-                  <Typography sx={{ fontSize: 13, mt: 0.5 }}>
-                    병원: {record.animalHospitalName}
-                  </Typography>
-                  <Typography sx={{ fontSize: 13 }}>
-                    처방약: {record.animalMedication}
-                  </Typography>
-                  <Typography sx={{ fontSize: 13 }}>
-                    메모: {record.animalTreatmentMemo}
-                  </Typography>
-                </Box>
-                <Box>
-                  <IconButton onClick={() => handleEdit(record)}>
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(record.id)}>
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-
-          {/* ▼ 더보기 버튼 */}
-          {records.length > MAX_VISIBLE_RECORDS && !showAll && (
-            <Button onClick={() => setShowAll(true)} sx={{ mt: 1 }}>
-              + 더보기
-            </Button>
-          )}
-        </>
-      )}
-    </Box>
+    
   </Box>
 );
 };

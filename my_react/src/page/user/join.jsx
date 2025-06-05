@@ -9,7 +9,7 @@ const Register = () => {
   const [usersId, setUsersId] = useState('');
   const [users_password, setUsers_Password] = useState('');
   const [users_password_confirm, setUsers_Password_confirm] = useState('');
-  const [users_email, setUsers_Email] = useState('');
+  const [usersEmail, setUsersEmail] = useState('');
   const [users_name, setUsers_Name] = useState('');
   const usersIdRef = useRef();
   const users_passwordRef = useRef();
@@ -62,13 +62,13 @@ const Register = () => {
     }
 
     
-    if (CmUtil.isEmpty(users_email)) {
+    if (CmUtil.isEmpty(usersEmail)) {
       showAlert('이메일을 입력해주세요.');
       users_emailRef.current?.focus();
       return;
     }
 
-    if (!CmUtil.isEmail(users_email)) {
+    if (!CmUtil.isEmail(usersEmail)) {
       showAlert('유효한 이메일 형식이 아닙니다.');
       users_emailRef.current?.focus();
       return;
@@ -88,7 +88,7 @@ const Register = () => {
     }
    
     try {
-      const response = await register({ users_name, usersId, users_password, users_email}).unwrap();
+      const response = await register({ users_name, usersId, users_password, usersEmail}).unwrap();
       if (response.success) {
         showAlert("회원가입에 성공 하셨습니다. 로그인화면으로 이동합니다.", () => { navigate('/user/login.do'); });
       } else {
@@ -131,7 +131,7 @@ const Register = () => {
     }
   };
   const handleSendEmailCode = async () => {
-    if (!CmUtil.isEmail(users_email)) {
+    if (!CmUtil.isEmail(usersEmail)) {
       showAlert('유효한 이메일 형식이 아닙니다.');
       return;
     }
@@ -141,7 +141,7 @@ const Register = () => {
       const res = await fetch(`${BACKEND_URL}/api/email/send-code.do`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ users_email, usersId })
+        body: JSON.stringify({ usersEmail, usersId })
       });
       const data = await res.json();
 
@@ -183,7 +183,7 @@ const Register = () => {
       const res = await fetch(`${BACKEND_URL}/api/email/verify-code.do`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ users_email, code: emailCode })
+        body: JSON.stringify({ usersEmail, code: emailCode })
       });
       const data = await res.json();
       if (data.success) {
@@ -264,11 +264,11 @@ const Register = () => {
         type="email"
         fullWidth
         margin="normal"
-        value={users_email}
+        value={usersEmail}
         inputRef={users_emailRef}
         inputProps={{ maxLength: 200 }} // <- 여기 추가
         onChange={(e) => {
-          setUsers_Email(e.target.value);
+          setUsersEmail(e.target.value);
           setIsEmailVerified(false);
           setEmailSent(false);
           setEmailCode('');

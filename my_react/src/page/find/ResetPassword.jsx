@@ -12,7 +12,7 @@ const ResetPassword = () => {
   const { showAlert } = useCmDialog();
 
     // ✅ useLocation으로 전달된 userId 사용
-  const userId = location.state?.userId;
+  const usersId = location.state?.usersId;
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [resetPassword] = useResetPasswordMutation();
@@ -36,14 +36,14 @@ const ResetPassword = () => {
       return;
     }
 
-    if (!userId) {
+    if (!usersId) {
       showAlert('사용자 정보가 유실되었습니다.');
       navigate('/user/findPw.do');
       return;
     }
 
     try {
-      await resetPassword({ userId, newPassword, confirmPassword }).unwrap();
+      await resetPassword({ usersId, newPassword, confirmPassword }).unwrap();
       showAlert('비밀번호가 성공적으로 변경되었습니다.');
       navigate('/user/login.do');
     } catch (error) {
