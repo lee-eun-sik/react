@@ -48,14 +48,17 @@ const Pet_Form = () => {
     }
 
     try {
-      const formData = new FormData();
+      const jsonData = {
+        animalName,
+        animalSpecies,
+        animalAdoptionDate: animalAdoptionDate ? animalAdoptionDate.format('YYYY-MM-DD') : '',
+        birthDate: birthDate ? birthDate.format('YYYY-MM-DD') : '',
+        gender,
+        animalMemo
+      };
 
-      formData.append('animalName', animalName);
-      formData.append('animalSpecies', animalSpecies);
-      formData.append('animalAdoptionDate', animalAdoptionDate ? animalAdoptionDate.format('YYYY-MM-DD') : '');
-      formData.append('birthDate', birthDate ? birthDate.format('YYYY-MM-DD') : '');
-      formData.append('gender', gender);
-      formData.append('animalMemo', animalMemo);
+      const formData = new FormData();
+      formData.append('data', new Blob([JSON.stringify(jsonData)], { type: 'application/json' }));
 
       if (imageFile) {
         formData.append('imageFile', imageFile);

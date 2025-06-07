@@ -8,21 +8,21 @@ export const petApi = createApi({
   endpoints: (builder) => ({
     Pet_Form: builder.mutation({
       query: (formData) => ({
-        url: '/api/pet/animalregister.do',
+        url: '/pet/animalregister.do',
         method: 'POST',
         body: formData,
       }),
     }),
     Pet_Form_Update: builder.mutation({
       query: (formData) => ({
-        url: '/api/pet/petUpdate.do',
+        url: '/pet/petUpdate.do',
         method: 'POST',
         body: formData, 
       }),
     }),
     Pet_Form_Hospital: builder.mutation({
       query: (formData) => ({
-        url: '/api/pet/petHospital.do',
+        url: '/pet/petHospital.do',
         method: 'POST',
         body: formData,
       }),
