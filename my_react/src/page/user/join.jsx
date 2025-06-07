@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+ import React, { useState, useRef } from 'react'; 
 import { useRegisterMutation } from '../../features/user/userApi';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography} from '@mui/material';
@@ -7,15 +7,15 @@ import { CmUtil } from '../../cm/CmUtil';
 import { useEffect } from 'react';
 const Register = () => {
   const [usersId, setUsersId] = useState('');
-  const [users_password, setUsers_Password] = useState('');
-  const [users_password_confirm, setUsers_Password_confirm] = useState('');
+  const [usersPassword, setUsersPassword] = useState('');
+  const [usersPassword_confirm, setUsersPassword_confirm] = useState('');
   const [usersEmail, setUsersEmail] = useState('');
-  const [users_name, setUsers_Name] = useState('');
+  const [usersName, setUsersName] = useState('');
   const usersIdRef = useRef();
-  const users_passwordRef = useRef();
-  const users_password_confirmRef = useRef();
-  const users_emailRef = useRef();
-  const users_nameRef =useRef();
+  const usersPasswordRef = useRef();
+  const usersPassword_confirmRef = useRef();
+  const usersEmailRef = useRef();
+  const usersNameRef =useRef();
   const [emailCode, setEmailCode] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -38,9 +38,9 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleRegisterClick = async () => {
-    if (CmUtil.isEmpty(users_name)) {
+    if (CmUtil.isEmpty(usersName)) {
       showAlert('닉네임 입력해주세요.');
-      users_nameRef.current?.focus();
+      usersNameRef.current?.focus();
       return;
     }
 
@@ -50,36 +50,36 @@ const Register = () => {
       return;
     }
 
-    if (CmUtil.isEmpty(users_password)) {
+    if (CmUtil.isEmpty(usersPassword)) {
       showAlert('비밀번호를 입력해주세요.');
-      users_passwordRef.current?.focus();
+      usersPasswordRef.current?.focus();
       return;
     }
-    if (CmUtil.isEmpty(users_password_confirm)) {
+    if (CmUtil.isEmpty(usersPassword_confirm)) {
       showAlert('비밀번호를 다시 입력해주세요.');
-      users_password_confirmRef.current?.focus();
+      usersPassword_confirmRef.current?.focus();
       return;
     }
 
     
     if (CmUtil.isEmpty(usersEmail)) {
       showAlert('이메일을 입력해주세요.');
-      users_emailRef.current?.focus();
+      usersEmailRef.current?.focus();
       return;
     }
 
     if (!CmUtil.isEmail(usersEmail)) {
       showAlert('유효한 이메일 형식이 아닙니다.');
-      users_emailRef.current?.focus();
+      usersEmailRef.current?.focus();
       return;
     }
     if (!isUserIdAvailable) {
       showAlert('아이디 중복 확인을 해주세요.');
       return;
     }
-    if (users_password !== users_password_confirm) {
+    if (usersPassword !== usersPassword_confirm) {
       showAlert('비밀번호가 일치하지 않습니다.');
-      users_password_confirmRef.current?.focus();
+      usersPassword_confirmRef.current?.focus();
       return;
     }
     if (!isEmailVerified) {
@@ -88,7 +88,7 @@ const Register = () => {
     }
    
     try {
-      const response = await register({ users_name, usersId, users_password, usersEmail}).unwrap();
+      const response = await register({ usersName, usersId, usersPassword, usersEmail}).unwrap();
       if (response.success) {
         showAlert("회원가입에 성공 하셨습니다. 로그인화면으로 이동합니다.", () => { navigate('/user/login.do'); });
       } else {
@@ -166,7 +166,7 @@ const Register = () => {
         }, 1000);
 
         showAlert('이메일로 인증번호가 전송되었습니다.');
-      } else if (data.code === 'DUPLICATE_EMAIL') {
+      } else if (data.message === '해당 이메일은 이미 가입되어 있습니다.') {
         // 서버에서 중복 이메일 응답 시
         showAlert('해당 이메일은 이미 가입되어 있습니다.');
       } else {
@@ -215,9 +215,9 @@ const Register = () => {
         label="닉네임*"
         fullWidth
         margin="normal"
-        value={users_name}
-        inputRef={users_nameRef}
-        onChange={(e) => setUsers_Name(e.target.value)}
+        value={usersName}
+        inputRef={usersNameRef}
+        onChange={(e) => setUsersName(e.target.value)}
         onKeyPress={handleKeyPress}
       />
 
@@ -243,9 +243,9 @@ const Register = () => {
         type="password"
         fullWidth
         margin="normal"
-        value={users_password}
-        inputRef={users_passwordRef}
-        onChange={(e) => setUsers_Password(e.target.value)}
+        value={usersPassword}
+        inputRef={usersPasswordRef}
+        onChange={(e) => setUsersPassword(e.target.value)}
         onKeyPress={handleKeyPress}
       />
       <TextField
@@ -253,9 +253,9 @@ const Register = () => {
         type="password"
         fullWidth
         margin="normal"
-        value={users_password_confirm}
-        inputRef={users_password_confirmRef}
-        onChange={(e) => setUsers_Password_confirm(e.target.value)}
+        value={usersPassword_confirm}
+        inputRef={usersPassword_confirmRef}
+        onChange={(e) => setUsersPassword_confirm(e.target.value)}
         onKeyPress={handleKeyPress}
       />
 
@@ -265,7 +265,7 @@ const Register = () => {
         fullWidth
         margin="normal"
         value={usersEmail}
-        inputRef={users_emailRef}
+        inputRef={usersEmailRef}
         inputProps={{ maxLength: 200 }} // <- 여기 추가
         onChange={(e) => {
           setUsersEmail(e.target.value);
@@ -320,4 +320,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Register; 
