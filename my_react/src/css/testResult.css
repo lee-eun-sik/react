@@ -1,0 +1,24 @@
+.result-container{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 640px;
+}
+.result-name{
+    margin-bottom:40px;
+    font-size: 24px;
+    font-weight:700;
+    /* letter-spacing:2px; */
+    color:#5E350A;
+}
+.result-content{
+    text-align: center;
+    margin-bottom:20px;
+    color:#5E350A;
+    font-weight: 400;
+}
+.result-recommend{
+    font-size:12px;
+    color:#5E350A;
+}

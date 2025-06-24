@@ -9,7 +9,7 @@ const LayoutLogin = ({ children }) => {
   return (
     <div className="layout">
       <Header />
-      <main style={{ padding: '20px' }}>{children}</main>
+      <main>{children}</main>
       <Footer />
       {DialogComponent}
     </div>

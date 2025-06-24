@@ -1,0 +1,40 @@
+body{
+    margin:0;
+    padding: 0;
+    /* overflow: hidden; */
+}
+.test-button{
+    position: absolute;
+    width:250px;
+    height: 60px;
+    top:86%;
+    left:18%;
+    padding:5px 20px;
+    background-color:white;
+    color:#583403;
+    border: 3px solid #583403;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family:'Courier New', Courier, monospace;
+}
+.back-test-button{
+    position:absolute;
+    top:2%;
+    left:3%;
+    border-radius: 10px;
+    height: 35px;
+    min-width: 0;
+    width:35px;
+    background-color: rgba(54, 54, 54, 0.4);
+    border: none;
+} 
+
+.background-img{
+    width:100%;
+    height:100vh;
+    background-size:cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+}

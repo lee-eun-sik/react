@@ -1,0 +1,67 @@
+/* src/css/plantCreate.css */
+
+.plant-create-container {
+  max-width: 400px;
+  padding: 3px 35px;
+  background-color: #ffffff; /* 컨테이너 배경색을 흰색으로 */
+  border-radius: 12px; /* 컨테이너 모서리 둥글게 */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08); /* 그림자 효과 */
+  text-align: center;
+  height: 700px;
+  
+}
+
+/* 폼 스택 (입력 필드 그룹) */
+.plant-form-stack {
+  margin-top: 20px;
+}
+
+/* 각 입력 필드 행 */
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* 라벨과 입력 필드 사이 간격 */
+}
+
+/* 라벨 텍스트 */
+.label-text {
+  flex-basis: 90px; /* 라벨 너비 고정 */
+  min-width: 90px; /* 최소 너비 */
+  font-size: 0.95rem !important;
+  color: #555;
+  font-weight: 500;
+  text-align: left; /* 라벨 왼쪽 정렬 */
+}
+
+/* 입력 필드 wrapper (TextField와 Combo에 적용) */
+.input-field-wrapper {
+  flex-grow: 1; /* 남은 공간을 채우도록 */
+  background-color: #f0f0f0 !important; /* 이미지 와 동일한 회색 배경 */
+  border-radius: 8px !important; /* 모서리 둥글게 */
+}
+
+/* TextField의 내부 input 요소 스타일 */
+.input-field-wrapper .MuiInputBase-input {
+  padding: 8px 14px !important; /* 내부 패딩 조절 */
+  height: auto !important; /* 높이 자동 조정 */
+}
+
+/* DatePicker의 입력 필드 스타일 */
+.MuiDatePicker-root .MuiOutlinedInput-root {
+  background-color: #f0f0f0 !important;
+  border-radius: 8px !important;
+}
+
+/* 생육 상태 TextField (multiline) */
+.status-field .input-field-wrapper {
+  padding: 10px 14px !important; /* 멀티라인 TextField는 padding이 다를 수 있음 */
+  align-items: flex-start; /* 텍스트가 위에서 시작하도록 */
+  box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+}
+
+/* 등록 버튼 */
+.register-button {
+  width: 100%; /* 너비 100% */
+  margin-top: 30px !important; /* 위 여백 */
+  height: 50px; /* 버튼 높이 */
+}

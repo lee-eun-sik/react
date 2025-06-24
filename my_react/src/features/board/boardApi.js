@@ -2,10 +2,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import baseQueryWithAuthHandler from '../../cm/CmCustomBaseQuery'; 
 export const boardApi = createApi({
-  reducerPath: 'boardApi',
+  reducerPath: 'boardApi', //중복있으면안됨
   baseQuery: baseQueryWithAuthHandler,
   endpoints: (builder) => ({
-    boardList: builder.query({
+    boardList: builder.query({  //단순조회  query        데이터에변화  mutation
       query: (params) => ({
         url: '/board/list.do',
         method: 'POST',

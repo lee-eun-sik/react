@@ -1,0 +1,43 @@
+.toggle-container {
+  width: 50px;
+  height: 33px;
+  background-color: #2e5c30;
+  border-radius: 30px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+}
+
+.toggle-container.on {
+  background-color: #ec801a; /* 진한 초록 */
+}
+
+.toggle-circle {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  position: absolute;
+  left: 5px;
+}
+
+.toggle-container.on .toggle-circle {
+  transform: translateX(30px);
+}
+
+.toggle-img.plant {
+  position: absolute;
+  right: 11px;
+  width: 16px;
+  height: 16px;
+}
+.toggle-img.pet {
+  position: absolute;
+  left: 11px;
+  width: 16px;
+  height: 16px;
+}

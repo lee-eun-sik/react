@@ -7,6 +7,7 @@ import { setAlertCheck} from '../features/user/userSlice';
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.REACT_APP_API_BASE_URL,
   credentials: 'include',
+
 });
 
 const baseQueryWithAuthHandler = async (args, api, extraOptions) => {
@@ -27,7 +28,8 @@ const baseQueryWithAuthHandler = async (args, api, extraOptions) => {
       if(!alertCheck) {
         dispatch(setAlertCheck(true));
         alert("인증이 만료 되었습니다. 로그인화면으로 이동합니다.");
-        navigateTo('/user/login.do');
+        window.location.href = "/";
+        // navigateTo('/');
       }
     }, 1000); 
   }

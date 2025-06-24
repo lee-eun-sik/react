@@ -1,0 +1,66 @@
+.Home_Layout{
+    padding: 0;
+    margin: 0;
+    height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.Test_Image{
+    height: "206px";
+    display: "block";
+}
+
+.Test_Button{
+    position: absolute;
+    top:75%;
+    left:5%;
+    padding:5px 20px;
+    background-color:white;
+    color:#583403;
+    font-weight: bold;
+    border: 2px solid #583403;
+    border-radius: 10px;
+    cursor: pointer;
+};
+
+.Tab_Buttons{
+  width: 100%;
+}
+
+.Tab_Wrapper{
+  display:flex;
+  flex-direction: row;
+  width: 360px;
+}
+
+.Tab_Wrapper button{
+  width: 180px;
+  background-color: #526B5C;
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.Under_Line {
+  display: inline-block;
+  padding-bottom: 4px; /* 기본적으로 공간을 확보 */
+}
+
+.Tab_Buttons.active .Under_Line {
+  border-bottom: 2px solid white;
+  padding-bottom: 2px;
+}
+
+.Home_Selectbox{
+  width: 100%;
+  display: flex; 
+  justify-content:flex-end;
+  margin-top: 5px;
+}
+

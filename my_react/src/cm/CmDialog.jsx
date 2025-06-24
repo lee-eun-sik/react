@@ -1,7 +1,7 @@
 import { Dialog, DialogTitle, DialogActions, Button, Typography, DialogContent, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useEffect } from 'react';
-const CmDialog = ({ title = "알림", isOpen, setIsOpen, message, yesCallBack, noCallBack, type = 'alert'}) => {
+const CmDialog = ({ title = "알림", isOpen, setIsOpen, message, yesCallBack, noCallBack, type = 'alert', children}) => {
         // 다이얼로그 닫기
         const handleClose = () => {
           setIsOpen(false);
@@ -62,20 +62,21 @@ const CmDialog = ({ title = "알림", isOpen, setIsOpen, message, yesCallBack, n
       <DialogContent sx={{ padding: '20px 24px' }}>
         <Typography variant="body1" sx={{ fontSize: '1rem', color: '#333' }}>
           {message}
+          {children}
         </Typography>
       </DialogContent>
 
       <DialogActions sx={{ justifyContent: type === 'alert' ? 'center' : 'flex-end', px: 3, pb: 2 }}>
         {type === 'alert' ? (
-          <Button onClick={handleClose} variant="contained" color="primary">
+          <Button onClick={handleClose} variant="contained" sx={{backgroundColor:'#88AE97'}}>
             확인
           </Button>
         ) : (
           <>
-            <Button onClick={handleCancel} variant="outlined" color="secondary">
+            <Button onClick={handleCancel} variant="outlined" sx={{color:'#A44D4D', borderColor:'#A44D4D'}}>
               취소
             </Button>
-            <Button onClick={handleConfirm} variant="contained" color="primary">
+            <Button onClick={handleConfirm} variant="contained" sx={{backgroundColor:'#88AE97'}}>
               확인
             </Button>
           </>

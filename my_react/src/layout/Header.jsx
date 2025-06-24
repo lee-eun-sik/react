@@ -22,15 +22,16 @@ export default function Header() {
     ],
     "user": [
       { "name": "마이페이지", "path": "/user/view.do" },
-      { "name": "게시판", "path": "/board/list.do" }
+      { "name": "게시판", "path": "/board/list.do" },
+      { "name": "유저목록", "path": "/user/list.do" }
     ]
   };
 
-  const { data, isSuccess, refetch } = useViewQuery();
+  const { data, isSuccess, refetch } = useViewQuery({});
   const alertCheck = useSelector((state) => state.user.alertCheck);
 
   const checkAuth = useCallback(async () => {
-    if (user?.userId && !alertCheck) {
+    if (user?.usersId && !alertCheck) {
       const result = await refetch();
       if (result?.error?.status === 401) {
         dispatch(setAlertCheck(true));
@@ -38,7 +39,7 @@ export default function Header() {
         navigate('/user/login.do');
       }
     }
-  }, [user?.userId, refetch, dispatch, navigate, alertCheck]);
+  }, [user?.usersId, refetch, dispatch, navigate, alertCheck]);
 
   useEffect(() => {
     checkAuth();
@@ -74,7 +75,7 @@ export default function Header() {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {userInfo && (
             <Typography sx={{ color: '#ecf0f1', marginRight: 2 }}>
-               {userInfo.username}님 환영합니다
+               {userInfo.usersName}님 환영합니다
             </Typography>
           )}
           <Box sx={{ display: 'flex', gap: 2 }}>

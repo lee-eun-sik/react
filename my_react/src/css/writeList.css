@@ -1,0 +1,123 @@
+.write-top-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 5px;
+}
+
+.write-top-section-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    margin: 0px;
+
+}
+
+.write-add-button {
+    /* padding:0;
+    height:38px;
+    width: 38px;
+    min-width: 38px; */
+}
+
+.write-add {
+    padding: 0;
+    height: 28px;
+    width: 28px;
+}
+
+.write-list {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid rgb(165, 165, 165);
+}
+
+.write-word {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.write-title {
+    padding: 10px 4px 10px 4px;
+    white-space: nowrap;
+}
+
+.write-date {
+    padding-top: 40px;
+    white-space: nowrap;
+}
+
+/* writeList.css */
+
+/* 전체 탭 래퍼 */
+.tab-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 110%;
+    margin-left: -19px;
+    overflow: hidden;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+/* 각 탭 버튼 */
+.tab-buttons {
+    width: 120px;
+    background-color: #526b5c;
+    color: white;
+    border: none;
+    padding: 12px 0;
+    font-size: 16px;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    overflow: hidden;
+    flex-grow: 1;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.tab-buttons:hover {
+    background-color: #6a8c75;
+    /* 호버 시 배경색 변경 (선택 사항) */
+}
+
+/* 텍스트를 감싸는 under_line div (여기서는 단순히 텍스트 중앙 정렬을 위해 사용) */
+.tab-buttons .under-line {
+    display: block;
+}
+
+
+
+.tab-buttons::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    /* 중앙 정렬을 위한 시작점 */
+    transform: translateX(-50%);
+    /* 정확한 중앙 정렬 */
+    height: 1px;
+    /* 언더라인의 두께 */
+    width: 0;
+    /* 기본 너비 0 (초기에는 보이지 않음) */
+    background-color: white;
+    transition: width 0.3s ease-in-out;
+    /* 너비 변화에 애니메이션 적용 */
+}
+
+/* active 클래스가 적용된 버튼의 ::after 가상 요소 스타일 */
+.tab-buttons.active::after {
+    width: 40%;
+}
+
+.home_selectbox {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+}

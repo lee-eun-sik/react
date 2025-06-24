@@ -6,7 +6,7 @@ const LayoutNoLogin = ({ children }) => {
      const { DialogComponent } = useCmDialog();
   return (
     <div className="layout">
-      <main style={{ padding: '20px' }}>{children}{DialogComponent}</main>
+      <main>{children}{DialogComponent}</main>
     </div>
   );
 };

@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import CmDialog from './CmDialog'; // 다이얼로그 컴포넌트
 
-const DialogContext = createContext();// 전역 관리할 때, 공통을 만들때 쓴다.
+const DialogContext = createContext();
 
 export const DialogProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,8 +42,9 @@ export const DialogProvider = ({ children }) => {
   );
 
   return (
-    <DialogContext.Provider value={{ showAlert, showConfirm, DialogComponent }}>
+    <DialogContext.Provider value={{ showAlert, showConfirm}}>
       {children}
+      {DialogComponent}
     </DialogContext.Provider>
   );
 };

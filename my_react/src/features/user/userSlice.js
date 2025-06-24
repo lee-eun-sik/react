@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    user: null, // user를 넣어준다.
+    user: null,
     alertCheck: false, 
     alertCheckPoint: "",  
   },

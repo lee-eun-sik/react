@@ -1,15 +1,31 @@
+// CommonComboBox.js
 import React from 'react';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-const CommonComboBox = ({ options, value, onChange, placeholder = '선택하세요', disabled = false }) => {
+
+const CommonComboBox = ({ options, value, onChange, placeholder = '선택하세요', disabled = false, sx, label }) => {
+
   return (
-    <select value={value} onChange={(e) => onChange(e.target.value)} disabled={disabled}>
-      <option value="">{placeholder}</option>
-      {options.map((opt) => (
-        <option key={opt.value} value={opt.value}>
-          {opt.label}
-        </option>
-      ))}
-    </select>
+    
+    <FormControl fullWidth disabled={disabled}>
+      <Select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        displayEmpty
+        inputProps={{'aria-label':'Without label'}}
+        label={label}
+        sx={sx} 
+      >
+        <MenuItem value="" disabled>
+         {placeholder}
+        </MenuItem>
+        {options.map((opt) => (
+          <MenuItem key={opt.value} value={opt.value}>
+            {opt.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 

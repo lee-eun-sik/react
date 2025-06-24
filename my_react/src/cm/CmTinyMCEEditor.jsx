@@ -7,7 +7,7 @@ const CmTinyMCEEditor = forwardRef(({ value, setValue, editorStyle, max = 4000 }
   const [editorCnt, setEditorCnt] = useState(value ? value.length : 0);
 
   // 입력 제한 및 상태 변경 최적화
-  const handleEditorChange = useCallback((content, editor) => { //함수를 기억함.
+  const handleEditorChange = useCallback((content, editor) => {
     const textLength = editor.getContent({ format: 'text' }).length;
 
     if (textLength <= max) {
@@ -19,13 +19,13 @@ const CmTinyMCEEditor = forwardRef(({ value, setValue, editorStyle, max = 4000 }
   }, [max, setValue, value]);
 
   // 에디터 옵션 설정
-  const editorOptions = useMemo(() => ({ // 객체 
-    height: 500,
+  const editorOptions = useMemo(() => ({
+    height: 300,
     min_height: 200,
     max_height: 500,
     menubar: false,
     plugins: ['image', 'link', 'lists', 'code'],
-    toolbar: 'undo redo | styleselect | bold italic | link image | alignleft aligncenter alignright | code',
+    toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | code',
     autosave_ask_before_unload: false,
     autosave: false,
     cache_suffix: Math.random().toString(),
@@ -70,7 +70,7 @@ const CmTinyMCEEditor = forwardRef(({ value, setValue, editorStyle, max = 4000 }
   return (
     <>
       <Editor
-        apiKey="1owxjke1x3a8s8eg6de5u9w0ra2z2ozu5ny8pglysw5qkgk9"
+        apiKey="t21bdvpu3429txt68453piyx714ym6twcsy0ush3vimghhl1"
         value={value}
         init={editorOptions}
         onEditorChange={handleEditorChange}
@@ -84,12 +84,12 @@ const CmTinyMCEEditor = forwardRef(({ value, setValue, editorStyle, max = 4000 }
           editor.setContent(value); // 이게 필요
         }}
       />
-      <br />
-      <div style={{ textAlign: 'right', color: editorCnt > max ? 'red' : 'inherit' }}>
+      <div style={{ textAlign: 'right', color: editorCnt > max ? 'red' : 'inherit', fontSize:"12px" }}>
         ({editorCnt}/{max})
       </div>
     </>
   );
 });
+//  link image 
 
 export default CmTinyMCEEditor;
